@@ -13,7 +13,7 @@ caffe.set_mode_gpu()
 caffe.set_device(0)
 
 
-model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/train-10-featuremaps-with-fc.prototxt'
+model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt'
 
 net = caffe.Net(model_def,      # defines the structure of the model,  # contains the trained weights
                 caffe.TEST)     # use test mode (e.g., don't perform dropout)
