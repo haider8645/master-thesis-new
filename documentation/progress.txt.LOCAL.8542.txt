@@ -1,0 +1,84 @@
+Date: 21/01/2018
+
+1) Learnt that convolution layers are simple multiplication of the kernel and the input layer. This process involves some
+shifting that I have to look at in the future. For now, it is enough to know that, a convolution layer is a very simple
+process of multiplication and summation.
+
+2) In caffe the num_outputs parameter means the number of filters/kernels or neuros in the convolution layer. Each filter has
+a different mask that is looking for a different edge, curve, shape etc..
+
+3) kernel_size is the size of the filter. If it is square then it is just a single value but for rectangular kernels, you can give
+two values.
+
+4) The kernel shifts along the image. If this shift is by 1 pixel then it is stride 1 or else more. Normally when using pooling layers
+of size 2x2 the stride is kept at 2, so that there is no overlapping of the pooling operation ;)
+
+5) Weight & bias fillers are used to initialize some values for them.
+
+6) The non-linear layer inbetween each conv layer is used to add some non-linearity to the network. This is also used to avoid the condition
+known as overfitting, where the network is so fine tuned for the training set, that it performs miserably for the test data set. A overfitted network might give 99 or 100 % accuracy for the training set but just 50 % or so for the test dat set.
+
+7)param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 } , the first one is learn rate for the wrights and the second one is for the bias. The bias learn rate
+is kept double the one for weights, this improves convergence somehow!
+
+8) Apart from pooling layers that are used for downsampling specifically, the conv layers also downsample the data from the previous layer.
+In the initial layers, we want to keep as much information as possible from the input layer, therefore we sometimes use zeropadding so that
+the output of convolution is the same size as the input layer dimensions :)
+
+The formula to the reduction in the output layer dimensions is :
+
+ O = ((W - K + 2* P)/S) + 1
+
+O : output height/length
+W : input height/length
+K : filter size
+P : Padding
+S : Stride
+
+And there is another forumla that is used to find the amount of padding we need to ensure input and output layers have the same dimenions
+
+The formula is that if you have the stride = 1 and you keep zero padding as follows :
+
+ Z = (K-1)/2
+
+Z : Zero padding
+K : filter size
+
+Then the output, input layers have the same dimenions ;)
+
+25/01/2018
+
+1) Succesfully able to setup on BIBA deep learning server.
+2) Build maste-thesis caffe master using make and created a remote repository called biba
+3) Trained the cae-02 network using mnist dataset, training took less than 30 mins, at home it took 12 hours.
+
+26/01/2018
+Use just the master branch, it is simple and easy to use.
+
+27/01/2018
+
+1) made a h5 file for trashnet datset
+
+03/02/2018
+
+1) I have succesfully made a plot of the CAE-2 using scatter plot. 
+
+08/02/2018
+Succesfully running t-sne and did visualization for 4 and 30 hidden neuros.
+
+17/02/2018
+Successfully made LMDB for trashnet.
+Testing trashnet for different networks
+
+I had in the first convolution layer the stride of 4. It is losing alot of information and the next layers are conv1 do not get any
+information to encode.
+
+18/02/2018
+
+Successfuly added unpooling layer to the caffe framework.
+
+
+03/03/2018
+Tried all sorts of different models for trashnet but still no luck in getting any results. The results obtained give no reconstruction and the image reconstructed at the output is just some noise.
+

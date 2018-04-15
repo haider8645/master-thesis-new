@@ -1,0 +1,1 @@
+I trained the model without FC layer and then added a FC layer in the middle, renamed the deconv3 to deconv3new and fine tuned the model

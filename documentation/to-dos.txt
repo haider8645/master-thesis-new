@@ -1,0 +1,46 @@
+
+For 22/01/2018
+
+1) See the caffe.proto file in caffe_root/src/caffe/proto/caffe.proto
+The above file has the definitions for all the layers, maybe it is has
+the syntax too, will be good to know this.
+
+2) Start working on the visualization of the trained caffe model either in python or matlab.
+
+3) Look into the paper of the CAE w/o pooling layers and see how they make sure that
+the training parameters are the same in both encoder & decoder part.
+
+
+
+24/01/2018
+
+1) The visualization using the python wrapper was done. Still need to do the scatter plot either in matlab or python.
+
+
+25/01/2018
+
+1) Trying the scatter plot in matlab or python
+2) make the hdf5 format dataset for the waste material images.
+
+27/01/2018
+made the hdf5 dataset for trashnet dataset
+
+28/01/2018
+change the cae model to work with 512 x 384 size images
+
+03/02/2018
+Work on the T-SNE for 4 - CAE model plot in 2D
+
+08/02/2018
+Start working on the trashnet. Convert the picture into smaller images and design a CAE model that is large enough to extract all information of different trash materials
+
+
+17/02/2018
+Get clustering results for trashnet before 27/02/2018
+
+
+03/03/2018
+Still do not have clustering results of trashnet.. Will try the same network on a dataset today that has just a single channel
+
+04/03/2018
+After finish the training, add a FC layer in the middle to do clustering

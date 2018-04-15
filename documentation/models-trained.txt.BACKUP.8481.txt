@@ -1,0 +1,45 @@
+20/01/2018
+1)
+
+The CAE without pooling layers is trained and tested
+
+data type: hdf5
+location: examples/master-thesis
+Training time: almost 12 hours ( 6 pm to about 6 am)
+
+
+2)
+
+The conventional FC auto encoder in caffe examples is training as of writing this file
+
+location: examples/mnist/
+data type: LMDB
+training time: going on, started at
+Note: I used the AdaDelta solver, and there are in total 3 options. I do not know the difference
+between these solvers but will see how they work in the near future in shaa Allah.
+
+
+3) I have also trained a CAE-04 
+
+03/02/2018
+
+I have re-trained the CAE-02 with batch size of 50 and max iterations at 50000.
+
+08/02/2018
+
+I have trained CAE-04 and CAE-30 and saw their visualization, they work as expected 
+
+18/02/2018
+
+Trained a network for mnist with unpooling and pooling layers
+
+03/03/2018
+
+trained all different types of models on trashnet, but still no luck
+<<<<<<< HEAD
+=======
+
+03/03/2018
+
+good results for 512-216-128-128-216-512 network
+>>>>>>> abf168246847a24b7d208e847f053cc7c28f8559

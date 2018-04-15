@@ -1,0 +1,1 @@
+This model was trained for the first 50k iterations with both scaling and mean_image, then at 50k the mean_image was removed. Still poor results

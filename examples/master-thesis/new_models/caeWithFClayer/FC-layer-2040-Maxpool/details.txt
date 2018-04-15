@@ -1,0 +1,1 @@
+#model was fine tuned by adding a fc layer in the middle, renaming deconv3 to a new layer and all other layers shared weights

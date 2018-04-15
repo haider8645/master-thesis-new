@@ -1,0 +1,1 @@
+#full model was trained from scratch and very poor results

@@ -1,0 +1,2 @@
+#training a network with 2 new conv,deconv and 30 hidden neurons
+#09/03/2018: trained a network without fc and using pool4 + deconv5 -> no-fc-only-shadow-detected 

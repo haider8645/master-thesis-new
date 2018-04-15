@@ -1,0 +1,1 @@
+training a network with 2 new conv,deconv and 30 hidden neurons

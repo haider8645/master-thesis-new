@@ -1,0 +1,18 @@
+net: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv5-not-good/train-5-updated.prototxt"
+test_iter: 700 # no_of_test_images / batch_size 
+test_interval: 1000
+test_compute_loss: true
+# ---------- training parameters ----------
+base_lr: 0.001
+weight_decay: 0.0001
+#momentum: 0.9
+lr_policy: "step"
+stepsize: 50000
+gamma: 0.1 
+# ---------- visualization parameters ----------
+display: 100
+max_iter: 340000 # epochs*(no_of_train_images / batch_size) 
+type: "AdaGrad"
+snapshot: 50000
+snapshot_prefix: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv5-not-good/snapshots/"
+solver_mode: GPU

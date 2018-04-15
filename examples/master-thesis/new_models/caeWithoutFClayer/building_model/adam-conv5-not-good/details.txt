@@ -1,0 +1,2 @@
+#10-03-2018: train-5-updated gives promising results.
+#24-03-2018: trained kipro on 5 conv layers --> conv5-kipro-prelu ( not great clustering )

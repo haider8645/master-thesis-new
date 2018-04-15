@@ -1,0 +1,202 @@
+name: "train-trashnetpoolingunpooling"
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.0039215684
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/trashnet-384-384/train_lmdb"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.0039215684
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/trashnet-384-384/test_lmdb"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+# --------- encoding part ---------
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 3 decay_mult: 0 }
+  convolution_param {
+    num_output: 14
+    kernel_size: 5
+    stride: 1
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1en"
+  type: "Sigmoid"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+#  top: "pool1_mask"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "ip1encode"
+  type: "InnerProduct"
+  bottom: "pool1"
+  top: "ip1encode"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 3 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "gaussian" std: 1 sparse: 25 }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig5en"
+  type: "Sigmoid"
+  bottom: "ip1encode"
+  top: "ip1encode"
+}
+layer {
+  name: "ip2encode"
+  type: "InnerProduct"
+  bottom: "ip1encode"
+  top: "ip2encode"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 3 decay_mult: 0 }
+  inner_product_param {
+    num_output: 100
+    weight_filler { type: "gaussian" std: 1 sparse: 25 }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+# --------- decoding part ---------
+layer {
+  name: "ip1decode"
+  type: "InnerProduct"
+  bottom: "ip2encode"
+  top: "ip1decode"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 3 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "gaussian" std: 1 sparse: 25 }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig5de"
+  type: "Sigmoid"
+  bottom: "ip1decode"
+  top: "ip1decode"
+}
+
+layer {
+    name: "reshape"
+    type: "Reshape"
+    bottom: "ip1decode"
+    top: "ip1decodesh"
+    reshape_param { shape { dim: 0 dim: 0 dim: 1 dim: 1 } }
+}
+
+layer {
+  name: "deconv4"
+  type: "Deconvolution"
+  bottom: "ip1decodesh"
+  top: "deconv4"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 3 decay_mult: 0 }
+  convolution_param {
+    num_output: 14
+    kernel_size: 32
+    stride: 1
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig4de"
+  type: "Sigmoid"
+  bottom: "deconv4"
+  top: "deconv4"
+}
+layer {
+  name: "unpool4"
+  type: "UNPOOLING"
+  bottom: "deconv4"
+#  bottom: "pool2_mask"
+  top: "unpool4"
+  unpooling_param {
+    unpool: MAX
+    kernel_size: 2
+    stride: 12
+    unpool_size: 384
+  }
+}
+
+# -- convert back to 784 elements --
+layer {
+  name: "deconv1neur"
+  type: "Deconvolution"
+  bottom: "unpool4"
+  top: "deconv1neur"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 3 decay_mult: 0 }
+  convolution_param {
+    num_output: 3
+    kernel_size: 1
+    stride: 1
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+# --------- calculate loss ---------
+layer {
+  name: "loss"
+  type: "SigmoidCrossEntropyLoss"
+  bottom: "deconv1neur"
+  bottom: "data"
+  top: "cross_entropy_loss"
+  loss_weight: 1
+}
+layer {
+  name: "deconv1neursig"
+  type: "Sigmoid"
+  bottom: "deconv1neur"
+  top: "deconv1neursig"
+}
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "deconv1neursig"
+  bottom: "data"
+  top: "l2_error"
+  loss_weight: 0
+}

@@ -1,0 +1,10 @@
+#models trained here.
+#09-03-2018 : model with 1000-500-1000 -> train-poolinglayer.proto -> poor results
+#10-03-2018 : model with 5 conv,no fc layer, 5 deconv layers, -> train-5-conv.proto and solver-5-conv.proto
+#10-03-2018 : model with 4 conv,no fc layer, 4 deconv layers, -> train-4-conv.proto and solver-4-conv.proto
+#10-03-2018 : model with fewer feature maps as train-4-conv--> train-4-conv-updated with l2
+#11-03-2018 : model with single feature map, an updated to train-4-updated -> train-single-featuremap
+#11-03-2018 : model with 10 feature maps, an update to train-single-featuremap -> train-ten-featuremaps
+#14-03-2018 : model with 10 feature maps and a fc layer, fine tuning - >  train-10-feature-maps-with-fc (TO DO)
+#15-03-2018 : model with smaller size with conv 4 layers -- > adam-conv4-good-results -> train-4-conv-smaller (TO DO)
+#15-03-2018 : model with 10 feature-maps and a fc layer with 640 nodes, full training, not fine-tuning

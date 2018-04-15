@@ -1,0 +1,281 @@
+name: "Autoencoder"
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.0039215684
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/train_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.0039215684
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 64
+    kernel_size: 11
+    stride: 4
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1en"
+  type: "Sigmoid"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "conv1"
+  top: "conv2"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 48
+    kernel_size: 5
+    stride: 2
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1en"
+  type: "Sigmoid"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "conv2"
+  top: "conv3"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 2
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1en"
+  type: "Sigmoid"
+  bottom: "conv3"
+  top: "conv3"
+}
+
+layer {
+  name: "ip1encode"
+  type: "InnerProduct"
+  bottom: "conv3"
+  top: "ip1encode"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "gaussian" std: 1 sparse: 25 }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig3en"
+  type: "Sigmoid"
+  bottom: "ip1encode"
+  top: "ip1encode"
+}
+####################CODE
+layer {
+  name: "ip2encode"
+  type: "InnerProduct"
+  bottom: "ip1encode"
+  top: "ip2encode"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 100
+    weight_filler { type: "gaussian" std: 1 sparse: 2 }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+#####################Decoder
+layer {
+  name: "ip1decode"
+  type: "InnerProduct"
+  bottom: "ip2encode"
+  top: "ip1decode"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "gaussian" std: 1 sparse: 25 }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig3de"
+  type: "Sigmoid"
+  bottom: "ip1decode"
+  top: "ip1decode"
+}
+layer {
+    name: "reshape"
+    type: "Reshape"
+    bottom: "ip1decode"
+    top: "ip1decodesh"
+    reshape_param { shape { dim: 0 dim: 0 dim: 1 dim: 1 } }
+}
+
+layer {
+  name: "deconv1"
+  type: "Deconvolution"
+  bottom: "ip1decodesh"
+  top: "deconv1"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 23
+    stride: 1
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1de"
+  type: "Sigmoid"
+  bottom: "deconv1"
+  top: "deconv1"
+}
+layer {
+  name: "deconv2"
+  type: "Deconvolution"
+  bottom: "deconv1"
+  top: "deconv2"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 48
+    kernel_size: 11
+    stride: 2
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1de"
+  type: "Sigmoid"
+  bottom: "deconv2"
+  top: "deconv2"
+}
+layer {
+  name: "deconv3"
+  type: "Deconvolution"
+  bottom: "deconv2"
+  top: "deconv3"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 64
+    kernel_size: 11
+    stride: 2
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1de"
+  type: "Sigmoid"
+  bottom: "deconv3"
+  top: "deconv3"
+}
+layer {
+  name: "deconv4"
+  type: "Deconvolution"
+  bottom: "deconv3"
+  top: "deconv4"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 98
+    kernel_size: 11
+    stride: 3
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "sig1de"
+  type: "Sigmoid"
+  bottom: "deconv4"
+  top: "deconv4"
+}
+# -- convert back to 16129 elements --
+layer {
+  name: "deconv1neur"
+  type: "Deconvolution"
+  bottom: "deconv4"
+  top: "deconv1neur"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 3
+    kernel_size: 20
+    stride: 1
+    weight_filler { type: "xavier" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+# --------- calculate loss ---------
+layer {
+  name: "loss"
+  type: "SigmoidCrossEntropyLoss"
+  bottom: "deconv1neur"
+  bottom: "data"
+  top: "cross_entropy_loss"
+  loss_weight: 1
+}
+layer {
+  name: "deconv1neursig"
+  type: "Sigmoid"
+  bottom: "deconv1neur"
+  top: "deconv1neursig"
+}
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "deconv1neursig"
+  bottom: "data"
+  top: "l2_error"
+  loss_weight: 0
+}

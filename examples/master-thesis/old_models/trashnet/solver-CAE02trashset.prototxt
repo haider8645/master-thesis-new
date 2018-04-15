@@ -1,0 +1,31 @@
+net: "/home/lod/master-thesis/examples/master-thesis/trashnet/train-CAE100trashset.prototxt"
+test_iter: 100
+test_interval: 1000
+test_compute_loss: true
+# ---------- training parameters ----------
+base_lr: 0.006
+weight_decay: 0.0005
+lr_policy: "fixed"
+# ---------- visualization parameters ----------
+display: 10
+max_iter: 20000
+snapshot: 1000
+snapshot_prefix: "/home/lod/master-thesis/examples/master-thesis/trashnet/snapshots"
+solver_mode: GPU
+||||||| merged common ancestors
+=======
+net: "/home/lod/master-thesis/examples/master-thesis/trashnet/train-CAE100trashset.prototxt"
+test_iter: 100
+test_interval: 1000
+test_compute_loss: true
+# ---------- training parameters ----------
+base_lr: 0.006
+weight_decay: 0.0005
+lr_policy: "fixed"
+# ---------- visualization parameters ----------
+display: 10
+max_iter: 20000
+snapshot: 1000
+snapshot_prefix: "/home/lod/master-thesis/examples/master-thesis/trashnet/snapshots"
+solver_mode: GPU
+>>>>>>> abf168246847a24b7d208e847f053cc7c28f8559

@@ -1,0 +1,28 @@
+#15/03/2018 : making the conv4 which gave good results to a smaller network of 128-64-32-16 since 256-128-64-32/10 already give respectable 
+results but with alot of dead zones.
+
+#15/03/2018: making the above network even smaller to 64-32-16-8, the above network gave good results for clustering
+#16/03/2018: making the above network even smaler to 32-16-8-4, with relu
+
+
+#17/03/2018: trained 32-16-8-4 with elu
+#17/03/2018: trained 128-64-32-16-16-32-64-128 with ELU
+
+
+#17/03/2018: trained: train above network with PReLU
+
+#18/03/2018: trainied above network with a activation layer in the deconv0
+#18/03/2018: trained the 16 feature maps conv4 network with kipro data with activation layer at deconv0
+#18/03/2018: trained the 32 feature maps conv4 with kipro data with activation at deconv0
+
+#19/03/2018: both 16 and 32 with activation at deconv0 gave poor results for kipro
+#19/03/2018: 32 feature maps + prelu error goes up to 1e+08 range
+#19/03/2018: trained  32 feature maps with relu, horrible results
+
+#19/03/2018: trained 32 feature maps with relu @ batch 10 with relu, no activation deconv0, failure
+
+#20/03/2018: trained 32 feature maps with new dataset with just 1 cropped center image of kipro dataset
+base_lr 0.0001 and not 0.001
+
+#25/03/2018: trained 32 feature maps with kipro, decon0 activated, prelu, xavier activation
+#25/03/2018: trained 32 maps with kipro, deconv0 activated, msra weight filler, prelu

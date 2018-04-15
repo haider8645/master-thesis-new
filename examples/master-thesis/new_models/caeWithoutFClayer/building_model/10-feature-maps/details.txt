@@ -1,0 +1,1 @@
+the conv4 layer model with 10 hidden featuremaps
