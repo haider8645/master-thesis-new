@@ -13,7 +13,7 @@ x=0
 for images in range(len(addrs)):
     
 #############################################
-#### CODE TO CROP EACH IMAGE INTO 12 SECTIONS
+#### CODE TO CROP EACH IMAGE INTO SECTIONS
 #    size=(512,384)
     img=Image.open(addrs[images])
     head, tail = os.path.split(addrs[images])
@@ -26,7 +26,7 @@ for images in range(len(addrs)):
     for j in range(0,2):
         for i in range(0,4):
             img_crop = img.crop((startwidth, startheight, width, height))
-            if (j == 1 and i == 2): #save only a selected images, not all 8 images.
+            if (j == 1 and i == 2): #save only a selected images
                 img_crop.save('/home/haider/caffe/python-scripts/kipro/data-cropped-center/'+str(tail)+str(x)+'.png', 'PNG')
  #           print img_crop.size
             startwidth=startwidth+384
