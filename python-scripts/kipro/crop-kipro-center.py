@@ -1,9 +1,9 @@
-from PIL import Image
+import Image
 import glob
 import os
 import random
 
-trash_pics = '/home/lod/master-thesis/LMDB-datasets/kipro/hendrik-dataset-transformed/validation_images/*.png' #reading the trash data set files
+trash_pics = '/home/lod/master-thesis/LMDB-datasets/kipro/hendrik-dataset-transformed/test-train-images/KI-pro-data-shuffled/*.png' #reading the trash data set files
 
 addrs = glob.glob(trash_pics)
 print len(addrs)
@@ -15,10 +15,9 @@ for images in range(len(addrs)):
 #############################################
 #### CODE TO CROP EACH IMAGE INTO SECTIONS
 #    size=(512,384)
+    print addrs[images]
     img=Image.open(addrs[images])
     head, tail = os.path.split(addrs[images])
-    print addrs[images]
-#    img.resize(size,Image.ANTIALIAS)
     width = 584
     height = 584
     startwidth=200
@@ -27,7 +26,7 @@ for images in range(len(addrs)):
 #        for i in range(0,4):
     img_crop = img.crop((startwidth, startheight, width, height))
            # if (j == 1 and i == 2): #save only a selected images
-    img_crop.save('/home/lod/master-thesis/LMDB-datasets/kipro/hendrik-dataset-transformed/center_cropped_hendrik_dataset/validation_images/'+str(tail), 'PNG')
+    img_crop.save('/home/lod/master-thesis/LMDB-datasets/kipro/hendrik-dataset-transformed/center_cropped_hendrik_dataset/test_train_images/'+str(tail), 'PNG')
  #           print img_crop.size
 #            startwidth=startwidth+384
 #            width=width+384 

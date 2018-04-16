@@ -1,0 +1,17 @@
+16-04-2018
+
+The following lmdbs were created with the following sizes
+
+train_lmdb
+test_lmdb
+validation_lmdb
+
+
+Length of train_addrs
+1908
+Length of test_addrs
+818
+
+and separately created
+Length of validation_addrs
+930
