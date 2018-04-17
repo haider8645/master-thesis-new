@@ -19,7 +19,7 @@ caffe.set_mode_gpu()
 # set the model definitions since we are using a pretrained network here.
 # this protoype definitions can be changed to make significant changes in the learning method.
 model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_340000.caffemodel'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_300000.caffemodel'
 
 
 net = caffe.Net(model_def,      # defines the structure of the model
@@ -36,7 +36,7 @@ for j in range(0,900):
     net.forward()
     for i in range(0,32):
         if j < 900:
-            X = (net.blobs["conv4"].data[0,i])
+            X = (net.blobs["deconv4"].data[0,i])
             a[i]=np.concatenate((X[0,:],X[1,:],X[2,:],X[3,:],X[4,:],X[5,:],X[6,:],X[7,:]),axis=0)
 #            print a[j,:]
 
@@ -66,5 +66,5 @@ ax.scatter(centroids[:, 0], centroids[:, 1],
 
 cbar = fig.colorbar(cax, ticks=[1, 2, 3, 4, 5])
 cbar.ax.set_yticklabels(['shredded paper', 'folie', 'empty', 'cardboard', 'pamphlets'])  # vertically oriented colorbar
-plt.savefig('kipro-validation-tsne-pca-kmeans.png')
+plt.savefig('16-04-2018-deconv4-kipro-validation-tsne-pca-kmeans.png')
 

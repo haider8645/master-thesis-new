@@ -14,7 +14,7 @@ caffe.set_device(0)
 
 
 model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_340000.caffemodel'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_5823.caffemodel'
 
 
 net = caffe.Net(model_def,
@@ -33,7 +33,7 @@ for j in range(11):
     net.forward()
 
     for i in range(3):
-        if j == 5:
+        if j == 10:
             cv2.imwrite(os.path.join(dirname,'input_image_' + str(i) + '.jpg'), 255*net.blobs['data'].data[0,i])
     
   #  for i in range(20):
@@ -67,7 +67,7 @@ for j in range(11):
 #            cv2.imwrite(os.path.join(dirname,'deconv1_' + str(i) + '.jpg'), 255*net.blobs['deconv1'].data[0,i])
 
     for i in range(3):
-        if j== 5:
+        if j== 10:
             cv2.imwrite(os.path.join(dirname,'deconv0_' + str(i) + '.jpg'), 255*net.blobs['deconv0'].data[0,i])
 
 

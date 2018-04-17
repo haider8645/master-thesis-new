@@ -27,8 +27,8 @@ layer {
     scale: 0.0039215684
   }
   data_param {
-     source: "/home/lod/master-thesis/LMDB-datasets/kipro/test_lmdb"
-#    source: "/home/lod/master-thesis/LMDB-datasets/kipro/validaton_lmdb"
+#     source: "/home/lod/master-thesis/LMDB-datasets/kipro/test_lmdb"
+    source: "/home/lod/master-thesis/LMDB-datasets/kipro/validation_lmdb"
 #    source: "/home/lod/master-thesis/LMDB-datasets/cherry_lmdb"
 #    source: "/home/lod/master-thesis/LMDB-datasets/kipro-384x384-new-center-384/test_lmdb"
     batch_size: 1
