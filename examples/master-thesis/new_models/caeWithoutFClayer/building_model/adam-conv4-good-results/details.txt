@@ -26,4 +26,7 @@ base_lr 0.0001 and not 0.001
 
 #25/03/2018: trained 32 feature maps with kipro, decon0 activated, prelu, xavier activation
 #25/03/2018: trained 32 maps with kipro, deconv0 activated, msra weight filler, prelu
-#16/04/2018: training 32 maps with kipro, deconv0 activated, msra weights, prelu and train,test data from kipro
+#16/04/2018: trained 32 maps with kipro, deconv0 activated, msra weights, prelu and train,test data from kipro
+#20/04/2018: stopped training of the same above network without normalizing the dataset(e+11 range of errors .. )
+#20/04/2018: training above network with relu and msra weight fillerx
+#03/05/2018: training the above network with batch normalization and scale layers on hedrik prepared 3x227x227 dataset
