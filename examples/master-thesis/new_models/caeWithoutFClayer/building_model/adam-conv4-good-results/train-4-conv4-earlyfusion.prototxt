@@ -30,7 +30,7 @@ layer {
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
 #     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
-    batch_size: 1
+    batch_size: 30
     backend: LMDB
   }
 }
@@ -60,7 +60,7 @@ layer {
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
 #     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
-    batch_size: 1
+    batch_size: 30
     backend: LMDB
   }
 }
@@ -70,18 +70,6 @@ layer {
   type: "BatchNorm"
   bottom: "data/nir"
   top: "nir_data/bn"
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   batch_norm_param {
     moving_average_fraction: 0.9
   }
@@ -113,7 +101,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
-    num_output: 144
+    num_output: 450
     weight_filler { type:"msra"}
     bias_filler { type: "constant" value: 0 }
   }
@@ -132,18 +120,6 @@ layer {
   type: "BatchNorm"
   bottom: "data/img"
   top: "img_data/bn"
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   batch_norm_param {
     moving_average_fraction: 0.9
   }
@@ -302,7 +278,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
-    num_output: 144
+    num_output: 450
     weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
@@ -332,7 +308,7 @@ layer {
   reshape_param {
     shape {
       dim: 0  # copy the dimension from below
-      dim: 32
+      dim: 100
       dim: 3
       dim: 3 # infer it from the other dimensions
      }
