@@ -3,7 +3,7 @@ test_iter: 250 # no_of_test_images / batch_size
 test_interval: 1000
 test_compute_loss: true
 # ---------- training parameters ----------
-base_lr: 0.00001
+base_lr: 0.001
 weight_decay: 0.0001
 momentum: 0.9
 lr_policy: "step"
