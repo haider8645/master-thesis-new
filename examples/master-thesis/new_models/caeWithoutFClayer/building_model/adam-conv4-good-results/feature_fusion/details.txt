@@ -1,0 +1,2 @@
+#12-05-2018: -> earlyfusion: trained with respectable results, snapshot in snapshots-train-4-conv4-earlyfusion
+#12-05-2018: -> update-12-05-2018: removed conv4, deconv4 , made encoder, decoder symmertic, encoder fc1 has 450 units, decoder fc2 has 100(350 units differnce but maybe its not important)
