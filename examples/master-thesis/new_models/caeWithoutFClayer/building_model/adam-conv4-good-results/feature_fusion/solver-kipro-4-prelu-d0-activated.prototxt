@@ -1,4 +1,4 @@
-net: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/feature_fusion/train-4-conv4-earlyfusion.prototxt"
+net: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/feature_fusion/train-4-conv4-earlyfusion-update-12-05-2018.prototxt"
 test_iter: 250 # no_of_test_images / batch_size 
 test_interval: 1000
 test_compute_loss: true
