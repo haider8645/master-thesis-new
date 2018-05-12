@@ -18,14 +18,14 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-#  top: "label"
+  top: "label"
   include {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
-    batch_size: 30
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -53,9 +53,9 @@ layer {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
-    batch_size: 30
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -566,7 +566,7 @@ layer {
   name: "loss/img"
   type: "EuclideanLoss"
   bottom: "deconv0"
-  bottom: "data/img"
+  bottom: "img_data/bn"
   top: "l2_error/img"
   loss_weight: 1
 }
