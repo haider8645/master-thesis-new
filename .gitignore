@@ -12,8 +12,8 @@ python-scripts/kipro/data-cropped-384-no-jpg-ending/*
 python-scripts/mnist/backup-t-sne/*
 *.mdb
 *.db
-
-
+*.lmdb
+LMDB-datasets/*
 
 ## General
 
