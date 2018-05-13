@@ -8,6 +8,9 @@ layer {
   include {
     phase: TRAIN
   }
+  transform_param{
+    scale: 0.003921568627
+  }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/img_train_db"
     batch_size: 30
@@ -18,14 +21,14 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-#  top: "label"
+  top: "label"
   include {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
-    batch_size: 30
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -53,9 +56,9 @@ layer {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
-    batch_size: 30
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -152,7 +155,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 256
+    num_output: 128
     kernel_size: 11
     stride: 4
     weight_filler { type: "xavier" }
@@ -184,7 +187,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 128
+    num_output: 64
     kernel_size: 5
     stride: 1
     weight_filler { type: "xavier" }
@@ -217,7 +220,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 64
+    num_output: 32
     kernel_size: 3
     #pad: 1
     stride: 1
@@ -275,21 +278,6 @@ layer {
     axis: 1
 }
 }
-layer {
-  name: "reshape/concat"
-  type: "Reshape"
-  bottom: "img_nir/concat"
-  top: "img_nir/concat_reshape"
-  reshape_param {
-    shape {
-      dim: 0  # copy the dimension from below
-      dim: 100
-      dim: 3
-      dim: 3 # infer it from the other dimensions
-     }
-   }
-}
-
 
 ################################################################
 ### NIR
@@ -378,7 +366,7 @@ layer {
   name: "loss/nir"
   type: "EuclideanLoss"
   bottom: "nir/deconv1"
-  bottom: "nir_data/bn"
+  bottom: "data/nir"
   top: "l2_error/nir"
   loss_weight: 1
 }
@@ -439,7 +427,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 64
+    num_output: 32
     kernel_size: 1
     stride: 1
     weight_filler { type: "xavier" }
@@ -474,7 +462,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 128
+    num_output: 64
     kernel_size: 5
     stride: 1
 #    pad: 1
@@ -511,7 +499,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 256
+    num_output: 128
     kernel_size: 8
     stride: 1 
     weight_filler { type: "xavier" }
