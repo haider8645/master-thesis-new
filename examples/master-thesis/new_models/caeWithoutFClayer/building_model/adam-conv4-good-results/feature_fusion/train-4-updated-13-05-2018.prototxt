@@ -10,7 +10,7 @@ layer {
   }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/img_train_db"
-    batch_size: 30
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -25,7 +25,7 @@ layer {
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
 #    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
-    batch_size: 30
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -41,7 +41,7 @@ layer {
   }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/nir_train_db"
-    batch_size: 30
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -55,7 +55,7 @@ layer {
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
 #    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
-    batch_size: 30
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -152,7 +152,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 512
+    num_output: 64
     kernel_size: 5
     stride: 1
     weight_filler { type: "xavier" }
@@ -184,7 +184,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 256
+    num_output: 32
     kernel_size: 5
     stride: 1
     weight_filler { type: "xavier" }
@@ -217,7 +217,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 32
+    num_output: 16
     kernel_size: 3
     #pad: 1
     stride: 1
@@ -424,7 +424,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 32
+    num_output: 16
     kernel_size: 1
     stride: 1
     weight_filler { type: "xavier" }
@@ -459,7 +459,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 256
+    num_output: 32
     kernel_size: 5
     stride: 1
 #    pad: 1
@@ -496,7 +496,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 512
+    num_output: 64
     kernel_size: 8
     stride: 1 
     weight_filler { type: "xavier" }
