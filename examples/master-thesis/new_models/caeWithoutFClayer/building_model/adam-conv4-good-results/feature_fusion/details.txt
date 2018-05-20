@@ -1,2 +1,8 @@
 #12-05-2018: -> earlyfusion: trained with respectable results, snapshot in snapshots-train-4-conv4-earlyfusion
 #12-05-2018: -> update-12-05-2018: removed conv4, deconv4 , made encoder, decoder symmertic, encoder fc1 has 450 units, decoder fc2 has 100(350 units differnce but maybe its not important)
+                but the error is not decreasing, change lr to 0.001, changed adam to sgd, weight decay to 0.001 and no use
+#12-05-2018: -> taking loss w.r.t original data and not normalized data
+#13-05-2018: -> model with earlyfusion and respectable results is in the folder attempt 2
+#13-05-2018: -> model with fused but poor results with no norm scale is in attempt 1 folder
+#13-05-2018: -> model with many changes as in training file and still aweful results in folder 3
+#13-05-2018  -> testing the network with 4 conv layers but massive network!

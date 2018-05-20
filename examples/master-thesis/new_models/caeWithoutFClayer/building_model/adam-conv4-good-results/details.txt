@@ -31,3 +31,9 @@ base_lr 0.0001 and not 0.001
 #20/04/2018: training above network with relu and msra weight fillerx
 #03/05/2018: training the above network with batch normalization and scale layers on hedrik prepared 3x227x227 dataset
 #09/05/2018: training a new network for nir/img data with 2 loss layers
+#10/05/2018: removing the normalizing and scale layer until i have a denormalizing and de-scale layer in caffe
+#10/05/2018: poor reconstruction of above network, need a custom layer that does the reverse of BN and scale layer
+#11/05/2018: adding a new fc layer after concat layer 
+#12/05/2018: increased the nir and img fc layers to 900 each, summing to 1800 of total concat, respectable results of clusters
+#12/05/2018: trained just for nir data (excellent clusters)
+#12/05/2018: training just img data without scale layer
