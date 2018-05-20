@@ -1,0 +1,1 @@
+19/05/2018: each loss now has 0.5 weightage, added activation to concat layer
