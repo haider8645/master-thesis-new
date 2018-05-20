@@ -26,9 +26,9 @@ layer {
     phase: TEST
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
-    batch_size: 1
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    batch_size: 30
     backend: LMDB
   }
 }
@@ -56,9 +56,9 @@ layer {
     phase: TEST
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
-    batch_size: 1
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    batch_size: 30
     backend: LMDB
   }
 }
@@ -72,13 +72,17 @@ layer {
     moving_average_fraction: 0.9
   }
 }
+
+
+
+
 layer {
   name: "conv1/nir"
   type: "Convolution"
   bottom: "nir_data/bn"
   top: "conv1/nir"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 235
     kernel_size: 1
@@ -89,7 +93,7 @@ layer {
 }
 layer {
   name: "relu_nir/conv1"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "conv1/nir"
   top: "conv1/nir"
 }
@@ -100,7 +104,7 @@ layer {
   bottom: "conv1/nir"
   top: "nir/fc1"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 616
     weight_filler { type:"xavier"}
@@ -109,7 +113,7 @@ layer {
 }
 layer {
   name: "nir_relu/fc1"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "nir/fc1"
   top: "nir/fc1"
 }
@@ -120,7 +124,7 @@ layer {
   bottom: "nir/fc1"
   top: "nir/fc2"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
     weight_filler { type: "xavier"}
@@ -129,7 +133,7 @@ layer {
 }
 layer {
   name: "nir_relu/fc2"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "nir/fc2"
   top: "nir/fc2"
 }
@@ -153,7 +157,7 @@ layer {
   bottom: "img_data/bn"
   top: "conv1"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 11
@@ -164,7 +168,7 @@ layer {
 }
 layer {
   name: "relu1conv1"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "conv1"
   top: "conv1"
 }
@@ -185,7 +189,7 @@ layer {
   bottom: "pool1"
   top: "conv2"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 256
     kernel_size: 5
@@ -196,7 +200,7 @@ layer {
 }
 layer {
   name: "reluconv2"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "conv2"
   top: "conv2"
 }
@@ -218,7 +222,7 @@ layer {
   bottom: "pool2"
   top: "conv3"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 128
     kernel_size: 3
@@ -230,7 +234,7 @@ layer {
 }
 layer {
   name: "reluconv3"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "conv3"
   top: "conv3"
 }
@@ -254,7 +258,7 @@ layer {
   bottom: "pool3"
   top: "img/fc1"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
     weight_filler { type: "xavier"}
@@ -263,7 +267,7 @@ layer {
 }
 layer {
   name: "img_relu/fc1"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "img/fc1"
   top: "img/fc1"
 }
@@ -281,7 +285,7 @@ layer {
 
 layer {
   name: "img_nir_concat_relu"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "img_nir/concat"
   top: "img_nir/concat"
 }
@@ -295,7 +299,7 @@ layer {
   bottom: "img_nir/concat"
   top: "nir/fc3"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
     weight_filler { type: "xavier"}
@@ -304,7 +308,7 @@ layer {
 }
 layer {
   name: "nir_relu/fc3"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "nir/fc3"
   top: "nir/fc3"
 }
@@ -315,7 +319,7 @@ layer {
   bottom: "nir/fc3"
   top: "nir/fc4"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 616
     weight_filler { type: "xavier"}
@@ -324,7 +328,7 @@ layer {
 }
 layer {
   name: "nir_relu/fc4"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "nir/fc4"
   top: "nir/fc4"
 }
@@ -352,7 +356,7 @@ layer {
   bottom: "nir/concat_reshape"
   top: "nir/deconv1"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 235
     kernel_size: 1
@@ -363,7 +367,7 @@ layer {
 }
 layer {
   name: "relu_nir/deconv1"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "nir/deconv1"
   top: "nir/deconv1"
 }
@@ -396,7 +400,7 @@ layer {
   bottom: "img_nir/concat"
   top: "img/fc2"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 100
     weight_filler { type: "xavier"}
@@ -405,7 +409,7 @@ layer {
 }
 layer {
   name: "img_relu/fc2"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "img/fc2"
   top: "img/fc2"
 }
@@ -432,7 +436,7 @@ layer {
   bottom: "img/concat_reshape"
   top: "deconv3" 
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 128
     kernel_size: 1
@@ -443,7 +447,7 @@ layer {
 }
 layer {
   name: "reludeconv3"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "deconv3"
   top: "deconv3"
 }
@@ -467,7 +471,7 @@ layer {
   bottom: "unpool3"
   top: "deconv2"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 256
     kernel_size: 5
@@ -479,7 +483,7 @@ layer {
 }
 layer {
   name: "deconv2relu"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "deconv2"
   top: "deconv2"
 }
@@ -504,7 +508,7 @@ layer {
   bottom: "unpool2"
   top: "deconv1"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 8
@@ -515,7 +519,7 @@ layer {
 }
 layer {
   name: "deconv1relu"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "deconv1"
   top: "deconv1"
 }
@@ -526,7 +530,7 @@ layer {
   bottom: "deconv1"
   top: "deconv0"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 3
     kernel_size: 11
@@ -539,7 +543,7 @@ layer {
 
 layer {
   name: "deconv0relu"
-  type: "ReLU"
+  type: "PReLU"
   bottom: "deconv0"
   top: "deconv0"
 }
