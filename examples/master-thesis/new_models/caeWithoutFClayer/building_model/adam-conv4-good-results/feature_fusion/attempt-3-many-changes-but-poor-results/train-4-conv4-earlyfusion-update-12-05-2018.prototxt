@@ -8,9 +8,9 @@ layer {
   include {
     phase: TRAIN
   }
-#  transform_param{
-#    scale: 0.003921568627
-#  }
+  transform_param{
+    scale: 0.003921568627
+  }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/img_train_db"
     batch_size: 30
@@ -21,7 +21,7 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-  top: "label"
+#  top: "label"
   include {
     phase: TEST
   }
@@ -74,12 +74,20 @@ layer {
 }
 
 
+layer {
+  name: "nir_data/scale"
+  type: "Scale"
+  bottom: "nir_data/bn"
+  top: "nir_data/scale"
+  scale_param {
+  bias_term: true
+}
 
 
 layer {
   name: "conv1/nir"
   type: "Convolution"
-  bottom: "nir_data/bn"
+  bottom: "nir_data/scale"
   top: "conv1/nir"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
@@ -150,11 +158,21 @@ layer {
   }
 }
 
+layer {
+  name: "img_data/scale"
+  type: "Scale"
+  bottom: "img_data/bn"
+  top: "img_data/scale"
+  scale_param {
+  bias_term: true
+}
+
+
 # --------- encoding part ---------
 layer {
   name: "conv1"
   type: "Convolution"
-  bottom: "img_data/bn"
+  bottom: "img_data/scale"
   top: "conv1"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
@@ -377,7 +395,7 @@ layer {
   name: "loss/nir"
   type: "EuclideanLoss"
   bottom: "nir/deconv1"
-  bottom: "nir_data/bn"
+  bottom: "nir/data"
   top: "l2_error/nir"
   loss_weight: 0.5
 }
@@ -556,7 +574,7 @@ layer {
   name: "loss/img"
   type: "EuclideanLoss"
   bottom: "deconv0"
-  bottom: "img_data/bn"
+  bottom: "img/data"
   top: "l2_error/img"
   loss_weight: 0.5
 }
