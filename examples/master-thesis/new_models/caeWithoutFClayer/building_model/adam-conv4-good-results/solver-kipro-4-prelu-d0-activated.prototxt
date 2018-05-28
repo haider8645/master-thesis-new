@@ -1,9 +1,9 @@
-net: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-earlyfusion.prototxt"
-test_iter: 250 # no_of_test_images / batch_size 
+net: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt"
+test_iter: 1000 # no_of_test_images / batch_size 
 test_interval: 1000
 test_compute_loss: true
 # ---------- training parameters ----------
-base_lr: 0.001
+base_lr: 0.0001
 weight_decay: 0.0001
 momentum: 0.9
 lr_policy: "step"
