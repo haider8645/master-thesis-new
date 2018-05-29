@@ -8,8 +8,8 @@ layer {
     phase: TRAIN
   }
   transform_param {
-#    mean_file: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/mean/img_5_2_mean.binaryproto"
-#    scale: 0.003921569
+    mean_file: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/mean/img_5_2_mean.binaryproto"
+    scale: 0.003921569
   }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/img_train_db"
@@ -25,9 +25,9 @@ layer {
   include {
     phase: TEST
   }
-#  transform_param {
-#    scale: 0.003921569
-#  }
+  transform_param {
+    scale: 0.003921569
+  }
   data_param {
 #    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
