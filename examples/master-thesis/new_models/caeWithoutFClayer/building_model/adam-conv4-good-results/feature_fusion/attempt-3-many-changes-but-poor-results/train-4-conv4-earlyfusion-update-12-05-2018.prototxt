@@ -21,14 +21,14 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-#  top: "label"
+  top: "label"
   include {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
-    batch_size: 30
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -56,9 +56,9 @@ layer {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
-    batch_size: 30
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -72,17 +72,6 @@ layer {
     moving_average_fraction: 0.9
   }
 }
-
-
-layer {
-  name: "nir_data/scale"
-  type: "Scale"
-  bottom: "nir_data/bn"
-  top: "nir_data/scale"
-  scale_param {
-  bias_term: true
-}
-
 
 layer {
   name: "conv1/nir"
@@ -158,29 +147,22 @@ layer {
   }
 }
 
-layer {
-  name: "img_data/scale"
-  type: "Scale"
-  bottom: "img_data/bn"
-  top: "img_data/scale"
-  scale_param {
-  bias_term: true
-}
-
-
 # --------- encoding part ---------
 layer {
   name: "conv1"
   type: "Convolution"
   bottom: "img_data/scale"
   top: "conv1"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 0.00001 decay_mult: 0 }
+  param { lr_mult: 0.00001 decay_mult: 0 }
   convolution_param {
-    num_output: 512
+    num_output: 96
     kernel_size: 11
     stride: 4
-    weight_filler { type: "xavier" }
+    weight_filler {
+        type: "gaussian"
+        std: 0.01 
+  }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -202,17 +184,21 @@ layer {
   }
 }
 layer {
-  name: "conv2"
+  name: "conv2_renamed"
   type: "Convolution"
   bottom: "pool1"
   top: "conv2"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 1 decay_mult: 2 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 256
     kernel_size: 5
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler {
+        type: "gaussian"
+        std: 0.01
+  }
+
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -235,18 +221,21 @@ layer {
   }
 }
 layer {
-  name: "conv3"
+  name: "conv3_renamed"
   type: "Convolution"
   bottom: "pool2"
   top: "conv3"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 128
+    num_output: 384
     kernel_size: 3
-    #pad: 1
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler {
+        type: "gaussian"
+        std: 0.01
+  }
+
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -262,7 +251,6 @@ layer {
   type: "Pooling"
   bottom: "conv3"
   top: "pool3"
-#  top: "pool2_mask"
   pooling_param {
     pool: MAX
     kernel_size: 2
@@ -395,7 +383,7 @@ layer {
   name: "loss/nir"
   type: "EuclideanLoss"
   bottom: "nir/deconv1"
-  bottom: "nir/data"
+  bottom: "data/nir"
   top: "l2_error/nir"
   loss_weight: 0.5
 }
@@ -456,10 +444,14 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 128
+    num_output: 384
     kernel_size: 1
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler {
+        type: "gaussian"
+        std: 0.01
+  }
+
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -494,8 +486,11 @@ layer {
     num_output: 256
     kernel_size: 5
     stride: 1
-#    pad: 1
-    weight_filler { type: "xavier" }
+    weight_filler {
+        type: "gaussian"
+        std: 0.01
+  }
+
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -530,8 +525,11 @@ layer {
   convolution_param {
     num_output: 512
     kernel_size: 8
+    weight_filler {
+        type: "gaussian"
+        std: 0.01
+  }
     stride: 1 
-    weight_filler { type: "xavier" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -574,7 +572,7 @@ layer {
   name: "loss/img"
   type: "EuclideanLoss"
   bottom: "deconv0"
-  bottom: "img/data"
+  bottom: "data/img"
   top: "l2_error/img"
   loss_weight: 0.5
 }

@@ -74,20 +74,20 @@ layer {
 }
 
 
-layer {
-  name: "nir_data/scale"
-  type: "Scale"
-  bottom: "nir_data/bn"
-  top: "nir_data/scale"
-  scale_param {
-  bias_term: true
-}
-}
+#layer {
+#  name: "nir_data/scale"
+#  type: "Scale"
+#  bottom: "nir_data/bn"
+#  top: "nir_data/scale"
+#  scale_param {
+#  bias_term: true
+#}
+#}
 
 layer {
   name: "conv1/nir"
   type: "Convolution"
-  bottom: "nir_data/scale"
+  bottom: "nir_data/bn"
   top: "conv1/nir"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
@@ -158,21 +158,21 @@ layer {
   }
 }
 
-layer {
-  name: "img_data/scale"
-  type: "Scale"
-  bottom: "img_data/bn"
-  top: "img_data/scale"
-  scale_param {
-  bias_term: true
-}
-}
+#layer {
+#  name: "img_data/scale"
+#  type: "Scale"
+#  bottom: "img_data/bn"
+#  top: "img_data/scale"
+#  scale_param {
+#  bias_term: true
+#}
+#}
 
 # --------- encoding part ---------
 layer {
   name: "conv1"
   type: "Convolution"
-  bottom: "img_data/scale"
+  bottom: "img_data/bn"
   top: "conv1"
   param { lr_mult: 0.00001 decay_mult: 0 }
   param { lr_mult: 0.00001 decay_mult: 0 }
@@ -212,7 +212,7 @@ layer {
   param { lr_mult: 1 decay_mult: 2 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 256
+    num_output: 48
     kernel_size: 5
     stride: 1
     weight_filler {
@@ -249,7 +249,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 384
+    num_output: 24
     kernel_size: 3
     stride: 1
     weight_filler {
@@ -465,7 +465,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 384
+    num_output: 24
     kernel_size: 1
     stride: 1
     weight_filler {
@@ -504,7 +504,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 256
+    num_output: 48
     kernel_size: 5
     stride: 1
     weight_filler {
@@ -544,7 +544,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
-    num_output: 512
+    num_output: 96
     kernel_size: 8
     weight_filler {
         type: "gaussian"

@@ -1,1 +1,4 @@
 19/05/2018: each loss now has 0.5 weightage, added activation to concat layer
+21/05/2018: i made 6 conv and 6 deconv layers and the loss was going to e+26
+27/05/2018: testing with alexnet weights -> train-conv3-earlyfusion-update.prototxt
+27/05/2018: testing with padding on conv layers -> train-conv3-earlyfusion-padding.prototxt
