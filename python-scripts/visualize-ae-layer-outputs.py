@@ -10,11 +10,11 @@ sys.path.insert(0, caffe_root + 'python') # Correct the python path
 import caffe
 
 caffe.set_mode_gpu()
-caffe.set_device(0)
+caffe.set_device(1)
 
 
 model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_5823.caffemodel'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/snapshots-conv1-alexnet/_iter_15000.caffemodel'
 
 
 net = caffe.Net(model_def,
@@ -27,14 +27,14 @@ print("Blobs:")
 for name, blob in net.blobs.iteritems():
     print("{:<5}:  {}".format(name, blob.data.shape))
 
-dirname = '/home/lod/master-thesis/graphs/output_kipro15042018'
+dirname = '/home/lod/master-thesis/graphs/output_kipro21052018'
 for j in range(11):
 
     net.forward()
 
     for i in range(3):
-        if j == 10:
-            cv2.imwrite(os.path.join(dirname,'input_image_' + str(i) + '.jpg'), 255*net.blobs['data'].data[0,i])
+        if j == 5:
+            cv2.imwrite(os.path.join(dirname,'input_image_' + str(i) + '.jpg'), 255 * net.blobs['data/img'].data[0,i])
     
   #  for i in range(20):
   #      if j == 10:
@@ -67,8 +67,8 @@ for j in range(11):
 #            cv2.imwrite(os.path.join(dirname,'deconv1_' + str(i) + '.jpg'), 255*net.blobs['deconv1'].data[0,i])
 
     for i in range(3):
-        if j== 10:
-            cv2.imwrite(os.path.join(dirname,'deconv0_' + str(i) + '.jpg'), 255*net.blobs['deconv0'].data[0,i])
+        if j== 5:
+            cv2.imwrite(os.path.join(dirname,'deconv1_' + str(i) + '.jpg'), 255 * net.blobs['deconv1'].data[0,i])
 
 
 #    for i in range(10):
