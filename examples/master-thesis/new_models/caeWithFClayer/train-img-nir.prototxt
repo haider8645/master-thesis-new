@@ -1,0 +1,198 @@
+name: "img_nir"
+
+#Image data
+layer {
+  name: "data/img"
+  type: "Data"
+  top: "data/img"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+#    mean_file: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/mean/img_5_2_mean.binaryproto"
+    scale: 0.003921569
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/img_train_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+layer {
+  name: "data/img"
+  type: "Data"
+  top: "data/img"
+ # top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.003921569
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+ #   source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  include {
+    phase: TRAIN
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/nir_train_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+
+layer {
+  name: "nir_data/bn"
+  type: "BatchNorm"
+  bottom: "data"
+  top: "nir_data/bn"
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+
+layer {
+  name: "nir/fc1"
+  type: "InnerProduct"
+  bottom: "nir_data/bn"
+  top: "nir/fc1"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
+  }
+}
+layer {
+  name: "relu/fc1"
+  type: "PReLU"
+  bottom: "nir/fc1"
+  top: "nir/fc1"
+}
+
+layer {
+  name: "img_data/bn"
+  type: "BatchNorm"
+  bottom: "data/img"
+  top: "img_data/bn"
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+
+layer {
+  name: "img/fc1"
+  type: "InnerProduct"
+  bottom: "data/img"
+  top: "img/fc1"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
+  }
+}
+layer {
+  name: "img_relu/fc1"
+  type: "PReLU"
+  bottom: "img/fc1"
+  top: "img/fc1"
+}
+
+
+layer {
+  name: "img_nir/concat"
+  type: "Concat"
+  bottom: "img/fc1"
+  bottom: "nir/fc1"
+  top: "img_nir/concat"
+  concat_param {
+    axis: 1
+}
+}
+
+
+layer {
+  name: "nir/fc2"
+  type: "InnerProduct"
+  bottom: "img_nir/concat"
+  top: "nir/fc2"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
+  }
+}
+layer {
+  name: "relu/fc2"
+  type: "PReLU"
+  bottom: "nir/fc2"
+  top: "nir/fc2"
+}
+layer {
+  name: "img/fc2"
+  type: "InnerProduct"
+  bottom: "img_nir/concat"
+  top: "img/fc2"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 500
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
+  }
+}
+layer {
+  name: "img_relu/fc2"
+  type: "PReLU"
+  bottom: "img/fc2"
+  top: "img/fc2"
+}
+
+
+layer {
+  name: "loss/nir"
+  type: "EuclideanLoss"
+  bottom: "nir/fc1"
+  bottom: "nir/fc2"
+  top: "l2_error"
+  loss_weight: 1
+}
+
+layer {
+  name: "loss/img"
+  type: "EuclideanLoss"
+  bottom: "img/fc1"
+  bottom: "img/fc2"
+  top: "l2_error"
+  loss_weight: 1
+}
