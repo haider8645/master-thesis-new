@@ -21,7 +21,7 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
- # top: "label"
+  top: "label"
   include {
     phase: TEST
   }
@@ -29,8 +29,8 @@ layer {
     scale: 0.003921569
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
- #   source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -59,8 +59,8 @@ layer {
     phase: TEST
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -88,7 +88,7 @@ layer {
     num_output: 235
     kernel_size: 1
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -104,11 +104,16 @@ layer {
   type: "InnerProduct"
   bottom: "conv1/nir"
   top: "nir/fc1"
-  param { lr_mult: 1 decay_mult: 1 }
+  param {
+   name: "nir_fc1_matrix" 
+   lr_mult:1
+   decay_mult: 1 
+
+}
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 616
-    weight_filler { type:"xavier"}
+    weight_filler { type:"msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -123,11 +128,11 @@ layer {
   type: "InnerProduct"
   bottom: "nir/fc1"
   top: "nir/fc2"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "nir_fc2_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
-    weight_filler { type: "xavier"}
+    weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -155,13 +160,13 @@ layer {
   type: "Convolution"
   bottom: "img_data/bn"
   top: "conv1"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 0.001 decay_mult: 1 }
+  param { lr_mult: 0.002 decay_mult: 0 }
   convolution_param {
     num_output: 96
     kernel_size: 11
     stride: 4
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -193,7 +198,7 @@ layer {
     num_output: 256
     kernel_size: 5
     stride: 2
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -227,7 +232,7 @@ layer {
     kernel_size: 3
     #pad: 1
     stride: 2
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -263,7 +268,7 @@ layer {
     kernel_size: 3
     #pad: 1
     stride: 2
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -309,12 +314,12 @@ layer {
   type: "InnerProduct"
   bottom: "img/fc0"
   top: "img/fc1"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "img_fc1_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 2048
-    weight_filler { type: "xavier"}
-    bias_filler { type: "constant" value: 0 }
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -347,12 +352,13 @@ layer {
   type: "InnerProduct"
   bottom: "img_nir/concat"
   top: "nir/fc3"
-  param { lr_mult: 1 decay_mult: 1 }
+  param {lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
-    weight_filler { type: "xavier"}
-    bias_filler { type: "constant" value: 0 }
+#    transpose: true
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -366,12 +372,13 @@ layer {
   type: "InnerProduct"
   bottom: "nir/fc3"
   top: "nir/fc4"
-  param { lr_mult: 1 decay_mult: 1 }
+  param {lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 616
-    weight_filler { type: "xavier"}
-    bias_filler { type: "constant" value: 0 }
+#    transpose: true
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -406,7 +413,7 @@ layer {
     num_output: 235
     kernel_size: 1
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -423,7 +430,7 @@ layer {
   bottom: "nir/deconv1"
   bottom: "data/nir"
   top: "l2_error/nir"
-  loss_weight: 0.5
+  loss_weight: 0
 }
 
 
@@ -432,12 +439,13 @@ layer {
   type: "InnerProduct"
   bottom: "img_nir/concat"
   top: "img/fc4"
-  param { lr_mult: 1 decay_mult: 1 }
+  param {lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 2048
-    weight_filler { type: "xavier"}
-    bias_filler { type: "constant" value: 0 }
+#    transpose: true
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -456,8 +464,8 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 9600
-    weight_filler { type: "xavier"}
-    bias_filler { type: "constant" value: 0 }
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -495,7 +503,7 @@ layer {
     num_output: 384
     kernel_size: 3
     stride: 2
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -537,7 +545,7 @@ layer {
     num_output:256 
     kernel_size: 3
     stride: 2
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -573,7 +581,7 @@ layer {
     kernel_size: 5
     stride: 2
 #    pad: 1
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -609,7 +617,7 @@ layer {
     num_output: 3
     kernel_size: 11
     stride: 4
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -631,7 +639,7 @@ layer {
     num_output: 3
     kernel_size: 25
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -667,5 +675,5 @@ layer {
   bottom: "output"
   bottom: "data/img"
   top: "l2_error"
-  loss_weight: 0.5
+  loss_weight: 1
 }
