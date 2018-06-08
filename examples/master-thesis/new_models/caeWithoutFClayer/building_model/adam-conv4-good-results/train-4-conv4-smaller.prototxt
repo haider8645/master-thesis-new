@@ -21,7 +21,7 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-  top: "label"
+#  top: "label"
   include {
     phase: TEST
   }
@@ -29,8 +29,8 @@ layer {
     scale: 0.003921569
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -59,8 +59,8 @@ layer {
     phase: TEST
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -76,20 +76,20 @@ layer {
   }
 }
 
-
+######################################## NIR ENCODER ################################################
 layer {
   name: "conv1/nir"
   type: "Convolution"
   bottom: "nir_data/bn"
   top: "conv1/nir"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv1_nir_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 235
     kernel_size: 1
     stride: 1
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -105,7 +105,7 @@ layer {
   bottom: "conv1/nir"
   top: "nir/fc1"
   param {
-   name: "nir_fc1_matrix" 
+   name: "fc1_nir_matrix" 
    lr_mult:1
    decay_mult: 1 
 
@@ -114,7 +114,7 @@ layer {
   inner_product_param {
     num_output: 616
     weight_filler { type:"msra"}
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -128,12 +128,12 @@ layer {
   type: "InnerProduct"
   bottom: "nir/fc1"
   top: "nir/fc2"
-  param { name: "nir_fc2_matrix" lr_mult: 1 decay_mult: 1 }
+  param { name: "fc2_nir_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
     weight_filler { type: "msra"}
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -142,8 +142,8 @@ layer {
   bottom: "nir/fc2"
   top: "nir/fc2"
 }
-
-# --------- encoding part ---------
+######################################## NIR ENCODER ENDED ################################################
+######################################## IMAGES ENCODER STARTED ################################################
 
 layer {
   name: "img_data/bn"
@@ -160,14 +160,14 @@ layer {
   type: "Convolution"
   bottom: "img_data/bn"
   top: "conv1"
-  param { lr_mult: 0.001 decay_mult: 1 }
-  param { lr_mult: 0.002 decay_mult: 0 }
+  param { name: "conv1_img_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 96
     kernel_size: 11
     stride: 4
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -176,30 +176,20 @@ layer {
   bottom: "conv1"
   top: "conv1"
 }
-#layer {
-#  name: "pool1"
-#  type: "Pooling"
-#  bottom: "conv1"
-#  top: "pool1"
-#  pooling_param {
-#    pool:  MAX
-#    kernel_size: 2
-#    stride: 2
-#  }
-#}
+
 layer {
   name: "conv2_r"
   type: "Convolution"
   bottom: "conv1"
   top: "conv2_r"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv2_img_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
     kernel_size: 5
     stride: 2
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -208,24 +198,12 @@ layer {
   bottom: "conv2_r"
   top: "conv2_r"
 }
-#layer {
-#  name: "pool2"
-#  type: "Pooling"
-#  bottom: "conv2"
-#  top: "pool2"
-#  top: "pool2_mask"
-#  pooling_param {
-#    pool: MAX
-#    kernel_size: 2
-#    stride: 2
-#  }
-#}
 layer {
   name: "conv3_r"
   type: "Convolution"
   bottom: "conv2_r"
   top: "conv3_r"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv3_img_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 384
@@ -233,7 +211,7 @@ layer {
     #pad: 1
     stride: 2
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -243,25 +221,12 @@ layer {
   top: "conv3_r"
 }
 
-#layer {
-#  name: "pool3"
-#  type: "Pooling"
-#  bottom: "conv3"
-#  top: "pool3"
-#  top: "pool2_mask"
-#  pooling_param {
-#    pool: MAX
-#    kernel_size: 2
-#    stride: 2
-#  }
-#}
-################
 layer {
   name: "conv4_r"
   type: "Convolution"
   bottom: "conv3_r"
   top: "conv4_r"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv4_img_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 384
@@ -269,7 +234,7 @@ layer {
     #pad: 1
     stride: 2
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -287,34 +252,12 @@ layer {
   top: "img/fc0"
 }
 
-
-#layer {
-#  name: "img/fc0"
-#  type: "InnerProduct"
-#  bottom: "conv4_r"
-#  top: "img/fc0"
-#  param { lr_mult: 1 decay_mult: 1 }
-#  param { lr_mult: 2 decay_mult: 0 }
-#  inner_product_param {
-#    num_output: 9600
-#    weight_filler { type: "msra"}
-#    bias_filler { type: "constant" value: 0 }
-#  }
-#}
-#layer {
-#  name: "img_relu/fc0"
-#  type: "ReLU"
-#  bottom: "img/fc0"
-#  top: "img/fc0"
-#}
-
-
 layer {
   name: "img/fc1"
   type: "InnerProduct"
   bottom: "img/fc0"
   top: "img/fc1"
-  param { name: "img_fc1_matrix" lr_mult: 1 decay_mult: 1 }
+  param { name: "fc1_img_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 2048
@@ -329,6 +272,8 @@ layer {
   top: "img/fc1"
 }
 
+####################################################### IMAGES ENCODER ENDED ########################################################
+###################### CONCAT ###########################
 layer {
   name: "img_nir/concat"
   type: "Concat"
@@ -347,16 +292,18 @@ layer {
   top: "img_nir/concat"
 }
 
+################################## NIR DECODER STARTED ##############################################
+
 layer {
   name: "nir/fc3"
   type: "InnerProduct"
   bottom: "img_nir/concat"
   top: "nir/fc3"
-  param {lr_mult: 1 decay_mult: 1 }
+  param {name: "fc2_nir_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 450
-#    transpose: true
+    transpose: true
     weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 1 }
   }
@@ -372,11 +319,11 @@ layer {
   type: "InnerProduct"
   bottom: "nir/fc3"
   top: "nir/fc4"
-  param {lr_mult: 1 decay_mult: 1 }
+  param { name: "fc1_nir_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
     num_output: 616
-#    transpose: true
+    transpose: true
     weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 1 }
   }
@@ -407,14 +354,14 @@ layer {
   type: "Deconvolution"
   bottom: "nir/concat_reshape"
   top: "nir/deconv1"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv1_nir_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   convolution_param {
     num_output: 235
     kernel_size: 1
     stride: 1
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -433,17 +380,18 @@ layer {
   loss_weight: 0
 }
 
+##################################################### NIR DECODED ENDED  ########################################################
 
 layer {
   name: "img/fc4"
   type: "InnerProduct"
   bottom: "img_nir/concat"
   top: "img/fc4"
-  param {lr_mult: 1 decay_mult: 1 }
+  param { name: "fc1_img_matrix" lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 2048
-#    transpose: true
+    transpose: true
     weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 1 }
   }
@@ -497,14 +445,14 @@ layer {
   type: "Deconvolution"
   bottom: "img/concat_reshape"
   top: "deconv3"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv4_img_matrix"  lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 384
     kernel_size: 3
     stride: 2
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -514,39 +462,19 @@ layer {
   top: "deconv3"
 }
 
-#layer {
-#  name: "unpool4"
-#  type: "UNPOOLING"
-#  bottom: "deconv4"
-#  bottom: "pool2_mask"
-#  top: "unpool4"
-#  unpooling_param {
-#     unpool: MAX
-#     kernel_size: 2
-#     stride: 2
-#     unpool_size: 16
-#  }
-#}
-
-
-###############
-
-
-
-
 layer {
   name: "deconv2"
   type: "Deconvolution"
   bottom: "deconv3"
   top: "deconv2" 
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv3_img_matrix"  lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output:256 
+    num_output:256
     kernel_size: 3
     stride: 2
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -556,33 +484,19 @@ layer {
   top: "deconv2"
 }
 
-#layer {
-#  name: "unpool3"
-#  type: "UNPOOLING"
-#  bottom: "deconv3"
-#  bottom: "pool2_mask"
-##  top: "unpool3"
-#  unpooling_param {
-##     unpool: MAX
-#     kernel_size: 2
-#     stride: 2
-#     unpool_size: 40
-#  }
-#}
 layer {
   name: "deconv1"
   type: "Deconvolution"
   bottom: "deconv2"
   top: "deconv1"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv2_img_matrix"  lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 96
     kernel_size: 5
     stride: 2
-#    pad: 1
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -592,33 +506,19 @@ layer {
   top: "deconv1"
 }
 
-#layer {
-#  name: "unpool2"
-#  type: "UNPOOLING"
-#  bottom: "deconv2"
-#  bottom: "pool1_mask"
-#  top: "unpool2"
-#  unpooling_param {
-#    unpool: MAX
-#    kernel_size: 2
-#    stride: 2
-#    unpool_size: 86
-#  }
-#}
-
 layer {
   name: "deconv0"
   type: "Deconvolution"
   bottom: "deconv1"
   top: "deconv0"
-  param { lr_mult: 1 decay_mult: 1 }
+  param { name: "conv1_img_matrix"  lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 3
     kernel_size: 11
     stride: 4
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
@@ -640,7 +540,7 @@ layer {
     kernel_size: 25
     stride: 1
     weight_filler { type: "msra" }
-    bias_filler { type: "constant" value: 0 }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 
