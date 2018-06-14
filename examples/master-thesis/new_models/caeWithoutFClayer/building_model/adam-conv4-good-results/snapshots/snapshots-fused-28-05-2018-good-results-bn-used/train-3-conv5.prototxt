@@ -127,7 +127,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
-    num_output: 450
+    num_output: 50
     weight_filler { type: "xavier"}
     bias_filler { type: "constant" value: 0 }
   }
@@ -374,7 +374,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
-    num_output: 450
+    num_output: 50
     weight_filler { type: "xavier"}
     bias_filler { type: "constant" value: 0 }
   }
@@ -447,7 +447,7 @@ layer {
   bottom: "nir/deconv1"
   bottom: "data/nir"
   top: "l2_error/nir"
-  loss_weight: 1
+  loss_weight: 0.3
 }
 
 
