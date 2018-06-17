@@ -1,0 +1,1 @@
+train-3-conv5-just-img network with just 5 conv and 5 decon on img data -> 17/06/2018
