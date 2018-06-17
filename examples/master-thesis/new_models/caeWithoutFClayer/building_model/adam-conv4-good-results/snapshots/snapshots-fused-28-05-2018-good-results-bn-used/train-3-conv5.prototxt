@@ -21,7 +21,7 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-  top: "label"
+#  top: "label"
   include {
     phase: TEST
   }
@@ -29,8 +29,8 @@ layer {
     scale: 0.003921569
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -59,8 +59,8 @@ layer {
     phase: TEST
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -78,32 +78,32 @@ layer {
 
 
 
-layer {
-  name: "conv1/nir"
-  type: "Convolution"
-  bottom: "nir_data/bn_1"
-  top: "conv1/nir"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 0 }
-  convolution_param {
-    num_output: 235
-    kernel_size: 1
-    stride: 1
-    weight_filler { type: "xavier" }
-    bias_filler { type: "constant" value: 0 }
-  }
-}
-layer {
-  name: "relu_nir/conv1"
-  type: "PReLU"
-  bottom: "conv1/nir"
-  top: "conv1/nir"
-}
+#layer {
+#  name: "conv1/nir"
+#  type: "Convolution"
+#  bottom: "nir_data/bn_1"
+#  top: "conv1/nir"
+#  param { lr_mult: 1 decay_mult: 1 }
+#  param { lr_mult: 1 decay_mult: 0 }
+#  convolution_param {
+#    num_output: 235
+#    kernel_size: 1
+#    stride: 1
+#    weight_filler { type: "xavier" }
+#    bias_filler { type: "constant" value: 0 }
+#  }
+#}
+#layer {
+#  name: "relu_nir/conv1"
+#  type: "PReLU"
+#  bottom: "conv1/nir"
+#  top: "conv1/nir"
+#}
 
 layer {
   name: "nir/fc1"
   type: "InnerProduct"
-  bottom: "conv1/nir"
+  bottom: "nir_data/bn_1"
   top: "nir/fc1"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
@@ -155,8 +155,8 @@ layer {
   type: "Convolution"
   bottom: "img_data/bn_1"
   top: "conv1"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 0.0001 decay_mult: 1 }
+  param { lr_mult: 0.0002 decay_mult: 0 }
   convolution_param {
     num_output: 64
     kernel_size: 3
@@ -187,8 +187,8 @@ layer {
   type: "Convolution"
   bottom: "conv1"
   top: "conv2_r"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 0.0001 decay_mult: 1 }
+  param { lr_mult: 0.0002 decay_mult: 0 }
   convolution_param {
     num_output: 128
     kernel_size: 3
@@ -220,8 +220,8 @@ layer {
   type: "Convolution"
   bottom: "conv2_r"
   top: "conv3_r"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 0.0001 decay_mult: 1 }
+  param { lr_mult: 0.0002 decay_mult: 0 }
   convolution_param {
     num_output: 256
     kernel_size: 3
@@ -256,8 +256,8 @@ layer {
   type: "Convolution"
   bottom: "conv3_r"
   top: "conv4_r"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 0.0001 decay_mult: 1 }
+  param { lr_mult: 0.0002 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -280,12 +280,11 @@ layer {
   type: "Convolution"
   bottom: "conv4_r"
   top: "conv5_r"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 0.0001 decay_mult: 1 }
+  param { lr_mult: 0.0002 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    #pad: 1
     stride: 2
     weight_filler { type: "xavier" }
     bias_filler { type: "constant" value: 0 }
@@ -405,49 +404,49 @@ layer {
   top: "nir/fc4"
 }
 
-layer {
-  name: "reshape/nir"
-  type: "Reshape"
-  bottom: "nir/fc4"
-  top: "nir/concat_reshape"
-  reshape_param {
-    shape {
-      dim: 0  # copy the dimension from below
-      dim: 1
-      dim: 11
-      dim: 56 # infer it from the other dimensions
-     }
-   }
-}
-layer {
-  name: "nir/deconv1"
-  type: "Deconvolution"
-  bottom: "nir/concat_reshape"
-  top: "nir/deconv1"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 0 }
-  convolution_param {
-    num_output: 235
-    kernel_size: 1
-    stride: 1
-    weight_filler { type: "xavier" }
-    bias_filler { type: "constant" value: 0 }
-  }
-}
-layer {
-  name: "relu_nir/deconv1"
-  type: "PReLU"
-  bottom: "nir/deconv1"
-  top: "nir/deconv1"
-}
+#layer {
+#  name: "reshape/nir"
+#  type: "Reshape"
+# bottom: "nir/fc4"
+#  top: "nir/concat_reshape"
+#  reshape_param {
+#    shape {
+#      dim: 0  # copy the dimension from below
+#      dim: 235
+#      dim: 11
+#      dim: 56 # infer it from the other dimensions
+#     }
+#   }
+#}
+#layer {
+#  name: "nir/deconv1"
+#  type: "Deconvolution"
+#  bottom: "nir/concat_reshape"
+#  top: "nir/deconv1"
+#  param { lr_mult: 1 decay_mult: 1 }
+#  param { lr_mult: 1 decay_mult: 0 }
+#  convolution_param {
+#    num_output: 235
+#    kernel_size: 1
+#    stride: 1
+#    weight_filler { type: "xavier" }
+#    bias_filler { type: "constant" value: 0 }
+#  }
+#}
+#layer {
+#  name: "relu_nir/deconv1"
+#  type: "PReLU"
+#  bottom: "nir/deconv1"
+#  top: "nir/deconv1"
+#}
 
 layer {
   name: "loss/nir"
   type: "EuclideanLoss"
-  bottom: "nir/deconv1"
-  bottom: "data/nir"
+  bottom: "nir/fc4"
+  bottom: "nir/fc1"
   top: "l2_error/nir"
-  loss_weight: 0.3
+  loss_weight: 1
 }
 
 
