@@ -13,7 +13,7 @@ import caffe
 
 caffe.set_mode_gpu()
 caffe.set_device(0)
-model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt'
+model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/snapshots-fused-28-05-2018-good-results-bn-used/good-3-conv5/train-3-conv5-just-img.prototxt'
 model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_50000.caffemodel'
 
 net = caffe.Net(model_def,

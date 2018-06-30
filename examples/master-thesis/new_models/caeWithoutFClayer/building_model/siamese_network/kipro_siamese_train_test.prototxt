@@ -1,9 +1,46 @@
 name: "ImgNetwork"
+#Image data
+layer {
+  name: "data/img"
+  type: "Data"
+  top: "data/img"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+#    mean_file: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/mean/img_5_2_mean.binaryproto"
+    scale: 0.003921569
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/img_train_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+layer {
+  name: "data/img"
+  type: "Data"
+  top: "data/img"
+#  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.003921569
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+
+
 layer {
   name: "data/nir"
   type: "Data"
   top: "data/nir"
-  top: "sim"
   include {
     phase: TRAIN
   }
@@ -18,329 +55,233 @@ layer {
   name: "data/nir"
   type: "Data"
   top: "data/nir"
-  top: "sim"
   include {
     phase: TEST
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
 }
 
-#layer {
-#  name: "slice_pair"
-#  type: "Slice"
-#  bottom: "data/nir"
-#  top: "data"
-#  top: "data_p"
-#  slice_param {
-#    slice_dim: 1
-#    slice_point: 1
-#  }
-#}
+layer {
+  name: "nir_data/bn"
+  type: "BatchNorm"
+  bottom: "data/nir"
+  top: "nir_data/bn"
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+
+######################################## NIR ENCODER ################################################
+layer {
+  name: "conv1/nir"
+  type: "Convolution"
+  bottom: "nir_data/bn"
+  top: "conv1/nir"
+  param { name: "conv1_nir_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 1 decay_mult: 0 }
+  convolution_param {
+    num_output: 235
+    kernel_size: 1
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 1  }
+  }
+}
+layer {
+  name: "relu_nir/conv1"
+  type: "PReLU"
+  bottom: "conv1/nir"
+  top: "conv1/nir"
+}
+
+layer {
+  name: "nir/fc1"
+  type: "InnerProduct"
+  bottom: "conv1/nir"
+  top: "nir/fc1"
+  param {
+   name: "fc1_nir_matrix" 
+   lr_mult:1
+   decay_mult: 1 
+
+}
+  param { lr_mult: 1 decay_mult: 0 }
+  inner_product_param {
+    num_output: 616
+    weight_filler { type:"msra"}
+    bias_filler { type: "constant" value: 1 }
+  }
+}
+layer {
+  name: "nir_relu/fc1"
+  type: "PReLU"
+  bottom: "nir/fc1"
+  top: "nir/fc1"
+}
+layer {
+  name: "nir/fc2"
+  type: "InnerProduct"
+  bottom: "nir/fc1"
+  top: "nir/fc2"
+  param { name: "fc2_nir_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 1 decay_mult: 0 }
+  inner_product_param {
+    num_output: 450
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
+  }
+}
+layer {
+  name: "nir_relu/fc2"
+  type: "PReLU"
+  bottom: "nir/fc2"
+  top: "nir/fc2"
+}
+######################################## NIR ENCODER ENDED ################################################
+######################################## IMAGES ENCODER STARTED ################################################
+
+layer {
+  name: "img_data/bn"
+  type: "BatchNorm"
+  bottom: "data/img"
+  top: "img_data/bn"
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+
 layer {
   name: "conv1"
   type: "Convolution"
-  bottom: "data/nir"
+  bottom: "img_data/bn"
   top: "conv1"
-  param {
-    name: "conv1_w"
-    lr_mult: 1
-  }
-  param {
-    name: "conv1_b"
-    lr_mult: 2
-  }
+  param { name: "conv1_img_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 20
-    kernel_size: 1
-    stride: 1
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
-  name: "pool1"
-  type: "Pooling"
+  name: "relu1conv1"
+  type: "PReLU"
   bottom: "conv1"
-  top: "pool1"
-  pooling_param {
-    pool: MAX
-    kernel_size: 2
-    stride: 2
-  }
+  top: "conv1"
 }
+
 layer {
-  name: "conv2"
+  name: "conv2_r"
   type: "Convolution"
-  bottom: "pool1"
-  top: "conv2"
-  param {
-    name: "conv2_w"
-    lr_mult: 1
-  }
-  param {
-    name: "conv2_b"
-    lr_mult: 2
-  }
+  bottom: "conv1"
+  top: "conv2_r"
+  param { name: "conv2_img_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 50
-    kernel_size: 1
-    stride: 1
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "pool2"
-  type: "Pooling"
-  bottom: "conv2"
-  top: "pool2"
-  pooling_param {
-    pool: MAX
-    kernel_size: 2
+    num_output: 256
+    kernel_size: 5
     stride: 2
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
-  name: "ip1"
-  type: "InnerProduct"
-  bottom: "pool2"
-  top: "ip1"
-  param {
-    name: "ip1_w"
-    lr_mult: 1
-  }
-  param {
-    name: "ip1_b"
-    lr_mult: 2
-  }
-  inner_product_param {
-    num_output: 500
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
+  name: "reluconv2"
+  type: "PReLU"
+  bottom: "conv2_r"
+  top: "conv2_r"
 }
 layer {
-  name: "relu1"
-  type: "ReLU"
-  bottom: "ip1"
-  top: "ip1"
-}
-layer {
-  name: "ip2"
-  type: "InnerProduct"
-  bottom: "ip1"
-  top: "ip2"
-  param {
-    name: "ip2_w"
-    lr_mult: 1
-  }
-  param {
-    name: "ip2_b"
-    lr_mult: 2
-  }
-  inner_product_param {
-    num_output: 10
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "feat"
-  type: "InnerProduct"
-  bottom: "ip2"
-  top: "feat"
-  param {
-    name: "feat_w"
-    lr_mult: 1
-  }
-  param {
-    name: "feat_b"
-    lr_mult: 2
-  }
-  inner_product_param {
-    num_output: 2
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "conv1_p"
+  name: "conv3_r"
   type: "Convolution"
-  bottom: "data/nir"
-  top: "conv1_p"
-  param {
-    name: "conv1_w"
-    lr_mult: 1
-  }
-  param {
-    name: "conv1_b"
-    lr_mult: 2
-  }
+  bottom: "conv2_r"
+  top: "conv3_r"
+  param { name: "conv3_img_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 20
-    kernel_size: 1
-    stride: 1
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "pool1_p"
-  type: "Pooling"
-  bottom: "conv1_p"
-  top: "pool1_p"
-  pooling_param {
-    pool: MAX
-    kernel_size: 2
+    num_output: 384
+    kernel_size: 3
+    #pad: 1
     stride: 2
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
-  name: "conv2_p"
+  name: "reluconv3"
+  type: "PReLU"
+  bottom: "conv3_r"
+  top: "conv3_r"
+}
+
+layer {
+  name: "conv4_r"
   type: "Convolution"
-  bottom: "pool1_p"
-  top: "conv2_p"
-  param {
-    name: "conv2_w"
-    lr_mult: 1
-  }
-  param {
-    name: "conv2_b"
-    lr_mult: 2
-  }
+  bottom: "conv3_r"
+  top: "conv4_r"
+  param { name: "conv4_img_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
-    num_output: 50
-    kernel_size: 1
-    stride: 1
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "pool2_p"
-  type: "Pooling"
-  bottom: "conv2_p"
-  top: "pool2_p"
-  pooling_param {
-    pool: MAX
-    kernel_size: 2
+    num_output: 384
+    kernel_size: 3
+    #pad: 1
     stride: 2
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
-  name: "ip1_p"
+  name: "reluconv4"
+  type: "PReLU"
+  bottom: "conv4_r"
+  top: "conv4_r"
+}
+
+
+layer {
+  name: "img/fc0"
+  type: "Flatten"
+  bottom: "conv4_r"
+  top: "img/fc0"
+}
+
+layer {
+  name: "img/fc1"
   type: "InnerProduct"
-  bottom: "pool2_p"
-  top: "ip1_p"
-  param {
-    name: "ip1_w"
-    lr_mult: 1
-  }
-  param {
-    name: "ip1_b"
-    lr_mult: 2
-  }
+  bottom: "img/fc0"
+  top: "img/fc1"
+  param { name: "fc1_img_matrix" lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
-    num_output: 500
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
+    num_output: 450
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 1 }
   }
 }
 layer {
-  name: "relu1_p"
-  type: "ReLU"
-  bottom: "ip1_p"
-  top: "ip1_p"
+  name: "img_relu/fc1"
+  type: "PReLU"
+  bottom: "img/fc1"
+  top: "img/fc1"
 }
-layer {
-  name: "ip2_p"
-  type: "InnerProduct"
-  bottom: "ip1_p"
-  top: "ip2_p"
-  param {
-    name: "ip2_w"
-    lr_mult: 1
-  }
-  param {
-    name: "ip2_b"
-    lr_mult: 2
-  }
-  inner_product_param {
-    num_output: 10
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "feat_p"
-  type: "InnerProduct"
-  bottom: "ip2_p"
-  top: "feat_p"
-  param {
-    name: "feat_w"
-    lr_mult: 1
-  }
-  param {
-    name: "feat_b"
-    lr_mult: 2
-  }
-  inner_product_param {
-    num_output: 2
-    weight_filler {
-      type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
+
+
+# --------- calculate loss ---------
+
+
 layer {
   name: "loss"
   type: "ContrastiveLoss"
-  bottom: "feat"
-  bottom: "feat_p"
-  bottom: "sim"
+  bottom: "img/fc1"
+  bottom: "nir/fc2"
+  bottom: "data/img"
   top: "loss"
   contrastive_loss_param {
     margin: 1

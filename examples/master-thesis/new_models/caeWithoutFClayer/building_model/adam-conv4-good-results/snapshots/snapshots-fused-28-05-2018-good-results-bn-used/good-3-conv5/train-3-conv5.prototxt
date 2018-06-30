@@ -30,7 +30,9 @@ layer {
   }
   data_param {
 #    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+     source: "/home/lod/datasets/trashnet/data/test_lmdb/"
+
     batch_size: 1
     backend: LMDB
   }
@@ -120,10 +122,10 @@ layer {
   top: "nir/fc1"
 }
 layer {
-  name: "nir/fc2_r"
+  name: "nir/fc2"
   type: "InnerProduct"
   bottom: "nir/fc1"
-  top: "nir/fc2_r"
+  top: "nir/fc2"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
@@ -133,10 +135,10 @@ layer {
   }
 }
 layer {
-  name: "nir_relu/fc2_r"
+  name: "nir_relu/fc2"
   type: "PReLU"
-  bottom: "nir/fc2_r"
-  top: "nir/fc2_r"
+  bottom: "nir/fc2"
+  top: "nir/fc2"
 }
 # --------- encoding part ---------
 
@@ -352,7 +354,7 @@ layer {
   name: "img_nir/concat"
   type: "Concat"
   bottom: "img/fc1"
-  bottom: "nir/fc2_r"
+  bottom: "nir/fc2"
   top: "img_nir/concat"
   concat_param {
     axis: 1
@@ -367,10 +369,10 @@ layer {
 }
 
 layer {
-  name: "nir/fc3_r"
+  name: "nir/fc3"
   type: "InnerProduct"
   bottom: "img_nir/concat"
-  top: "nir/fc3_r"
+  top: "nir/fc3"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }
   inner_product_param {
@@ -380,15 +382,15 @@ layer {
   }
 }
 layer {
-  name: "nir_relu/fc3_r"
+  name: "nir_relu/fc3"
   type: "PReLU"
-  bottom: "nir/fc3_r"
-  top: "nir/fc3_r"
+  bottom: "nir/fc3"
+  top: "nir/fc3"
 }
 layer {
   name: "nir/fc4"
   type: "InnerProduct"
-  bottom: "nir/fc3_r"
+  bottom: "nir/fc3"
   top: "nir/fc4"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 0 }

@@ -20,23 +20,23 @@ caffe.set_mode_gpu()
 # set the model definitions since we are using a pretrained network here.
 # this protoype definitions can be changed to make significant changes in the learning method.
 #model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/feature_fusion/attempt-3-many-changes-but-poor-results/train-conv3-earlyfusion-update-27-05-2018.prototxt'
-model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/just_nir/train-just-nir.prototxt'
+model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/snapshots-fused-28-05-2018-good-results-bn-used/good-3-conv5/train-3-conv5.prototxt'
 #model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/feature_fusion/attempt-3-many-changes-but-poor-results/snapshots/_iter_40000.caffemodel'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/just_nir/snapshots/_iter_50000.caffemodel'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/snapshots-fused-28-05-2018-good-results-bn-used/good-3-conv5/_iter_340000.caffemodel'
 
 net = caffe.Net(model_def,      # defines the structure of the model
                 model_weights,  # contains the trained weights
                 caffe.TEST)     # use test mode (e.g., don't perform dropout)
 
-no_of_samples = 1500
-no_of_dimensions = 400
+no_of_samples = 1000
+no_of_dimensions = 900
 
 b = np.arange(no_of_samples*no_of_dimensions,dtype=float).reshape(no_of_samples, no_of_dimensions)
 labels = np.arange(no_of_samples).reshape(no_of_samples)
 
 for j in range(0,no_of_samples):
     net.forward()
-    b[j] = net.blobs["nir/fc2"].data[0]               
+    b[j] = net.blobs["img_nir/concat"].data[0]               
     labels[j] = (net.blobs["label"].data[0])
 #    print labels[j]
     iteration_count = 'Iteration: ' + repr(j)
@@ -69,5 +69,5 @@ ax.scatter3D(xs, ys, zs,s=20,c=labels,cmap = 'rainbow')
 
 for angle in range(0, 360):
     ax.view_init(30, angle)
-    plt.savefig('results/17-06-2018_angle:' + str(angle)+'.png')
+    plt.savefig('results/30-06-2018_angle:' + str(angle)+'.png')
 

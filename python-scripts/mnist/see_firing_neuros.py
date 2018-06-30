@@ -31,12 +31,12 @@ no_of_samples = 1500
 b = np.arange(no_of_samples*no_of_dimensions,dtype=float).reshape(no_of_samples, no_of_dimensions)
 labels = np.arange(no_of_samples).reshape(no_of_samples)
 
-number_of_specific_samples = 310
+number_of_specific_samples = 260
 
 activations= np.arange(number_of_specific_samples * no_of_dimensions,dtype=float).reshape(number_of_specific_samples,no_of_dimensions)
 
 
-label = 1
+label = 4
 count = 0
 
 for j in range(0,no_of_samples):
@@ -74,7 +74,7 @@ fig = plt.figure()
 N = len(fired_neurons_counts)
 x = range(N)
 width = 1
-plt.title('concat layer activations for pamphlets ')
+plt.title('concat layer activations for shredded paper')
 plt.bar(x, fired_neurons_counts, width, color="blue")
 plt.xlabel('neurons')
 plt.ylabel('activation count')
