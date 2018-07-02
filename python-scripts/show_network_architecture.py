@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import sys
 import os
 import cv2
+import sys
 
 caffe_root = '/home/lod/master-thesis/' # The caffe_root is changed to reflect the actual folder in the server.
 sys.path.insert(0, caffe_root + 'python') # Correct the python path
@@ -13,8 +14,7 @@ caffe.set_mode_gpu()
 caffe.set_device(0)
 
 
-model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/snapshots-fused-28-05-2018-good-results-bn-used/good-3-conv5/train-3-conv5-just-img.prototxt'
-
+model_def = str(sys.argv[1])
 net = caffe.Net(model_def,      # defines the structure of the model,  # contains the trained weights
                 caffe.TEST)     # use test mode (e.g., don't perform dropout)
 
