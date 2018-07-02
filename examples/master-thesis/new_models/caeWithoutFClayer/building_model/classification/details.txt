@@ -1,0 +1,1 @@
+training a classifier on fused data weights from 3x3 conv5 network

@@ -1,0 +1,18 @@
+net: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/classification/train-3-conv5-with-softmax.prototxt"
+test_iter: 700 # no_of_test_images / batch_size 
+test_interval: 1000
+test_compute_loss: true
+# ---------- training parameters ----------
+base_lr: 0.001
+weight_decay: 0.0001
+momentum: 0.9
+lr_policy: "step"
+stepsize: 10000
+gamma: 0.1 
+# ---------- visualization parameters ----------
+display: 1000
+max_iter: 55000 # epochs*(no_of_train_images / batch_size) 
+type: "Adam"
+snapshot: 50000
+snapshot_prefix: "/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/classification/snapshots/"
+solver_mode: GPU
