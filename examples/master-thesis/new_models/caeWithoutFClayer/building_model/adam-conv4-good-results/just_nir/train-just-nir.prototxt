@@ -6,9 +6,14 @@ layer {
   include {
     phase: TRAIN
   }
+  transform_param{
+    scale: 0.83333
+  }
+
+
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/nir_train_db"
-    batch_size: 30
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -16,13 +21,13 @@ layer {
   name: "data"
   type: "Data"
   top: "data"
-  top: "label"
+#  top: "label"
   include {
     phase: TEST
   }
   data_param {
-#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -50,7 +55,7 @@ layer {
     num_output: 235
     kernel_size: 1
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -70,7 +75,7 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 616
-    weight_filler { type: "xavier"}
+    weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -89,7 +94,7 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 400
-    weight_filler { type: "xavier"}
+    weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -109,7 +114,7 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 616
-    weight_filler { type: "xavier"}
+    weight_filler { type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
@@ -138,7 +143,7 @@ layer {
     num_output: 235
     kernel_size: 1
     stride: 1
-    weight_filler { type: "xavier" }
+    weight_filler { type: "msra" }
     bias_filler { type: "constant" value: 0 }
   }
 }
