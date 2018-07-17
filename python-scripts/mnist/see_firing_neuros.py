@@ -18,15 +18,15 @@ caffe.set_mode_gpu()
 
 # set the model definitions since we are using a pretrained network here.
 # this protoype definitions can be changed to make significant changes in the learning method.
-model_def =     '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results//snapshots/snapshots-fused-28-05-2018-good-results-bn-used/train-3-conv5.prototxt'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_300000.caffemodel'
+model_def =     '/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/train-autoencode-alexnet-only-nir.prototxt'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/snapshots/_iter_340000.caffemodel'
 
 
 net = caffe.Net(model_def,      # defines the structure of the model
                 model_weights,  # contains the trained weights
                 caffe.TEST)     # use test mode (e.g., don't perform dropout)
 
-no_of_dimensions = 900
+no_of_dimensions = 1000
 no_of_samples = 1500
 b = np.arange(no_of_samples*no_of_dimensions,dtype=float).reshape(no_of_samples, no_of_dimensions)
 labels = np.arange(no_of_samples).reshape(no_of_samples)
@@ -69,13 +69,12 @@ for k in range(0,no_of_dimensions):
     fired_neurons_counts.append(fired_neurons_position.count(k))    
 
 #print fired_neurons_counts[0]
-
 fig = plt.figure()
 N = len(fired_neurons_counts)
 x = range(N)
-width = 1
-plt.title('concat layer activations for shredded paper')
-plt.bar(x, fired_neurons_counts, width, color="blue")
+width = 0.5
+plt.title('img_nir/concat activations for shredded paper')
+plt.bar(x, fired_neurons_counts, width)
 plt.xlabel('neurons')
 plt.ylabel('activation count')
 #print "Neuron 1 fired: ", fired_neurons_position.count(1) , "times"

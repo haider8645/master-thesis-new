@@ -11,7 +11,7 @@ sys.path.insert(0, caffe_root + 'python') # Correct the python path
 import caffe
 
 caffe.set_mode_gpu()
-caffe.set_device(0)
+caffe.set_device(1)
 
 
 model_def = str(sys.argv[1])

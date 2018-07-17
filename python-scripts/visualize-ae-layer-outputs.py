@@ -13,9 +13,8 @@ caffe.set_mode_gpu()
 caffe.set_device(1)
 
 
-model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/train-4-conv4-smaller.prototxt'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_50000.caffemodel'
-
+model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/train-autoencode-alexnet-only-img-loss.prototxt'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/snapshots/just_image_loss/_iter_15005.caffemodel'
 
 net = caffe.Net(model_def,
                 model_weights,           # defines the structure of the model,  # contains the trained weights
@@ -28,7 +27,7 @@ for name, blob in net.blobs.iteritems():
     print("{:<5}:  {}".format(name, blob.data.shape))
 
 dirname = '/home/lod/master-thesis/graphs/output_kipro21052018'
-for j in range(11):
+for j in range(100):
 
     net.forward()
 
@@ -68,7 +67,7 @@ for j in range(11):
 
     for i in range(3):
        # if j== 5:
-            cv2.imwrite(os.path.join(dirname,'output_' + str(i) + '.jpg'), 255 * net.blobs['output'].data[0,i])
+            cv2.imwrite(os.path.join(dirname,'output_' + str(i)+ str(j)+ '.jpg'), 255 * net.blobs['output'].data[0,i])
 
 
 #    for i in range(10):

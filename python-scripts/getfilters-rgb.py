@@ -13,8 +13,8 @@ import caffe
 
 caffe.set_mode_gpu()
 caffe.set_device(0)
-model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/snapshots-fused-28-05-2018-good-results-bn-used/good-3-conv5/train-3-conv5-just-img.prototxt'
-model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/caeWithoutFClayer/building_model/adam-conv4-good-results/snapshots/_iter_50000.caffemodel'
+model_def = '/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/train-autoencode-alexnet_img_nir_2.prototxt'
+model_weights = '/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/snapshots/_iter_50000.caffemodel'
 
 net = caffe.Net(model_def,
                 model_weights,           # defines the structure of the model,  # contains the trained weights
