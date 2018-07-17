@@ -21,7 +21,7 @@ layer {
   name: "data"
   type: "Data"
   top: "data"
-#  top: "label"
+  top: "label"
   include {
     phase: TEST
   }
@@ -29,8 +29,8 @@ layer {
     scale: 0.83333
   }
   data_param {
-     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -361,11 +361,11 @@ layer {
 
 
 
-#layer {
-#  name: "loss_img"
-#  type: "EuclideanLoss"
-#  bottom: "output"
-#  bottom: "data/img"
-#  top: "error/img"
-#  loss_weight: 1
-#}
+layer {
+  name: "loss_nir"
+  type: "EuclideanLoss"
+  bottom: "output"
+  bottom: "data"
+  top: "error/nir"
+  loss_weight: 1
+}

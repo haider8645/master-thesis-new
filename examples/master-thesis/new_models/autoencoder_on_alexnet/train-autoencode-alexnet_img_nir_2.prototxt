@@ -21,7 +21,7 @@ layer {
   name: "data/img"
   type: "Data"
   top: "data/img"
-#  top: "label"
+  top: "label"
   include {
     phase: TEST
   }
@@ -29,8 +29,8 @@ layer {
     scale: 0.003921569
   }
   data_param {
-    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
- #   source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
+#    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/img_val_db"
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/img_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -47,7 +47,7 @@ layer {
   }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/nir_train_db"
-    batch_size: 30
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -59,8 +59,8 @@ layer {
     phase: TEST
   }
   data_param {
-     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
-#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
     batch_size: 1
     backend: LMDB
   }
@@ -353,7 +353,7 @@ layer {
 }
 
 layer {
-  name: "img/fc3"
+  name: "img/fc3_r"
   type: "InnerProduct"
   bottom: "img/fc2"
   top: "img/fc3"
@@ -366,7 +366,7 @@ layer {
   }
 }
 layer {
-  name: "img_relu/fc3"
+  name: "img_relu_r/fc3"
   type: "PReLU"
   bottom: "img/fc3"
   top: "img/fc3"

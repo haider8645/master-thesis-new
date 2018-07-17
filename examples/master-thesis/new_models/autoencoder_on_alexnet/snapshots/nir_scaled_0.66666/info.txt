@@ -1,0 +1,1 @@
+nir scaled in the fused network which was fine tuned from  100,000 iteration of cae trained on just images

@@ -1,0 +1,1 @@
+these weights are from img_nir_2 network fine tuned on just img cae trained on alexnet weights

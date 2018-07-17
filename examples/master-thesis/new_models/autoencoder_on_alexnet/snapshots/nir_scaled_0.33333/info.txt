@@ -1,0 +1,1 @@
+this was probably trained from scratch and not using the just img cae weights

@@ -46,7 +46,7 @@ layer {
     phase: TRAIN
   }
   transform_param {
-    scale: 0.66666  
+    scale: 0.66666
   }
   data_param {
     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/nir_train_db"

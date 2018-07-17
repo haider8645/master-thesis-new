@@ -1,0 +1,1 @@
+weights for img_nir network trained on image cae weights(which was trained on alexnet)
