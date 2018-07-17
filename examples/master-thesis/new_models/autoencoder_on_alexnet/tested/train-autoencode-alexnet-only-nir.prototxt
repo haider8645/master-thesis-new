@@ -1,0 +1,371 @@
+name: "autoencoder_based_on_nir_10_07_2018"
+
+################# NIR ####################################################################################################
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.83333
+  }
+  data_param {
+    source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_300_5_2_train/nir_train_db"
+    batch_size: 30
+    backend: LMDB
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.83333
+  }
+  data_param {
+#     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_150_5_2_val/nir_val_db"
+     source: "/home/lod/master-thesis/LMDB-datasets/prepared_dataSets/dataSet_5c_250_5_2_eval/nir_eval_db"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+
+layer {
+  name: "nir_data/bn"
+  type: "BatchNorm"
+  bottom: "data"
+  top: "nir_data/bn"
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+
+layer {
+  name: "conv1_nir"
+  type: "Convolution"
+  bottom: "nir_data/bn"
+  top: "conv1_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 235
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "nir_relu/conv1"
+  type: "PReLU"
+  bottom: "conv1_nir"
+  top: "conv1_nir"
+}
+
+layer {
+  name: "conv2_nir"
+  type: "Convolution"
+  bottom: "conv1_nir"
+  top: "conv2_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 100
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "nir_relu/conv2"
+  type: "PReLU"
+  bottom: "conv2_nir"
+  top: "conv2_nir"
+}
+
+layer {
+  name: "conv3_nir"
+  type: "Convolution"
+  bottom: "conv2_nir"
+  top: "conv3_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 50
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "nir_relu/conv3"
+  type: "PReLU"
+  bottom: "conv3_nir"
+  top: "conv3_nir"
+}
+
+layer {
+  name: "conv4_nir"
+  type: "Convolution"
+  bottom: "conv3_nir"
+  top: "conv4_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 25
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "nir_relu/conv4"
+  type: "PReLU"
+  bottom: "conv4_nir"
+  top: "conv4_nir"
+}
+
+layer {
+  name: "conv5_nir"
+  type: "Convolution"
+  bottom: "conv4_nir"
+  top: "conv5_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 5
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "nir_relu/conv5"
+  type: "PReLU"
+  bottom: "conv5_nir"
+  top: "conv5_nir"
+}
+layer {
+  name: "nir/flatten"
+  type: "Flatten"
+  bottom: "conv5_nir"
+  top: "nir/flatten"
+}
+
+layer {
+  name: "nir/fc1"
+  type: "InnerProduct"
+  bottom: "nir/flatten"
+  top: "nir/fc1"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 100
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu_nir/fc1"
+  type: "PReLU"
+  bottom: "nir/fc1"
+  top: "nir/fc1"
+}
+layer {
+  name: "nir/fc2"
+  type: "InnerProduct"
+  bottom: "nir/fc1"
+  top: "nir/fc2"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 50
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/fc2"
+  type: "PReLU"
+  bottom: "nir/fc2"
+  top: "nir/fc2"
+}
+layer {
+  name: "nir/fc3"
+  type: "InnerProduct"
+  bottom: "nir/fc2"
+  top: "nir/fc3"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 100
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/fc3"
+  type: "PReLU"
+  bottom: "nir/fc3"
+  top: "nir/fc3"
+}
+
+
+layer {
+  name: "nir/fc4"
+  type: "InnerProduct"
+  bottom: "nir/fc3"
+  top: "nir/fc4"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 230
+    weight_filler { type: "msra"}
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/fc4"
+  type: "PReLU"
+  bottom: "nir/fc4"
+  top: "nir/fc4"
+}
+
+
+layer {
+    name: "reshape"
+    type: "Reshape"
+    bottom: "nir/fc4"
+    top: "nir_fc4/reshaped"
+    reshape_param { shape { dim: 0 dim: 5 dim: 1 dim: 46 } }
+}
+layer {
+  name: "deconv1_nir"
+  type: "Deconvolution"
+  bottom: "nir_fc4/reshaped"
+  top: "deconv1_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 25
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/deconv1"
+  type: "PReLU"
+  bottom: "deconv1_nir"
+  top: "deconv1_nir"
+}
+
+layer {
+  name: "deconv2_nir"
+  type: "Deconvolution"
+  bottom: "deconv1_nir"
+  top: "deconv2_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 50
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/deconv2"
+  type: "PReLU"
+  bottom: "deconv2_nir"
+  top: "deconv2_nir"
+}
+
+layer {
+  name: "deconv3_nir"
+  type: "Deconvolution"
+  bottom: "deconv2_nir"
+  top: "deconv3_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 100
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/deconv3"
+  type: "PReLU"
+  bottom: "deconv3_nir"
+  top: "deconv3_nir"
+}
+layer {
+  name: "deconv4_nir"
+  type: "Deconvolution"
+  bottom: "deconv3_nir"
+  top: "deconv4_nir"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 235
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/deconv4"
+  type: "PReLU"
+  bottom: "deconv4_nir"
+  top: "deconv4_nir"
+}
+layer {
+  name: "output"
+  type: "Deconvolution"
+  bottom: "deconv4_nir"
+  top: "output"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 235
+    kernel_size: 3
+    stride: 1
+    weight_filler { type: "msra" }
+    bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "relu/output"
+  type: "PReLU"
+  bottom: "output"
+  top: "output"
+}
+
+
+
+
+
+layer {
+  name: "loss_nir"
+  type: "EuclideanLoss"
+  bottom: "output"
+  bottom: "data"
+  top: "error/nir"
+  loss_weight: 1
+}
