@@ -42,19 +42,19 @@ layer {
   type: "Convolution"
   bottom: "data/img"
   top: "conv1"
-  param { lr_mult: 0.0001 decay_mult: 1 }
-  param { lr_mult: 0.0002 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 96
     kernel_size: 11
     stride: 4
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "relu1conv1"
-  type: "ReLU"
+  type: "TanH"
   bottom: "conv1"
   top: "conv1"
 }
@@ -74,21 +74,21 @@ layer {
   type: "Convolution"
   bottom: "pool1"
   top: "conv2"
-  param { lr_mult: 0.001 decay_mult: 1 }
-  param { lr_mult: 0.002 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
     kernel_size: 5
     pad: 2
 #    group: 2
     stride: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "reluconv2"
-  type: "ReLU"
+  type: "TanH"
   bottom: "conv2"
   top: "conv2"
 }
@@ -108,20 +108,20 @@ layer {
   type: "Convolution"
   bottom: "pool2"
   top: "conv3"
-  param { lr_mult: 0.01 decay_mult: 1 }
-  param { lr_mult: 0.02 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 384
     kernel_size: 3
     pad: 1
     stride: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "reluconv3"
-  type: "ReLU"
+  type: "TanH"
   bottom: "conv3"
   top: "conv3"
 }
@@ -132,21 +132,21 @@ layer {
   type: "Convolution"
   bottom: "conv3"
   top: "conv4"
-  param { lr_mult: 0.1 decay_mult: 1 }
-  param { lr_mult: 0.2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 384
     kernel_size: 3
     pad: 1
- #   group: 2
+#    group: 2
     stride: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "reluconv4"
-  type: "ReLU"
+  type: "TanH"
   bottom: "conv4"
   top: "conv4"
 }
@@ -162,15 +162,15 @@ layer {
     num_output: 256
     kernel_size: 3
     pad: 1
-  #  group: 2
+#    group: 2
     stride: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "reluconv5"
-  type: "ReLU"
+  type: "TanH"
   bottom: "conv5"
   top: "conv5"
 }
@@ -203,13 +203,13 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 4096
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "img_relu/fc1"
-  type: "ReLU"
+  type: "TanH"
   bottom: "img/fc1"
   top: "img/fc1"
 }
@@ -223,13 +223,13 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 4096
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "img_relu/fc2"
-  type: "ReLU"
+  type: "TanH"
   bottom: "img/fc2"
   top: "img/fc2"
 }
@@ -243,13 +243,13 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 1000
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "img_relu/fc3"
-  type: "ReLU"
+  type: "TanH"
   bottom: "img/fc3"
   top: "img/fc3"
 }
@@ -265,13 +265,13 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 4096
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "img_relu/fc4"
-  type: "ReLU"
+  type: "TanH"
   bottom: "img/fc4"
   top: "img/fc4"
 }
@@ -285,13 +285,13 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 4096
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "img_relu/fc5"
-  type: "ReLU"
+  type: "TanH"
   bottom: "img/fc5"
   top: "img/fc5"
 }
@@ -305,13 +305,13 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
     num_output: 9216
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "img_relu/fc6"
-  type: "ReLU"
+  type: "TanH"
   bottom: "img/fc6"
   top: "img/fc6"
 }
@@ -357,13 +357,13 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "deconv1relu"
-  type: "ReLU"
+  type: "TanH"
   bottom: "deconv1"
   top: "deconv1"
 }
@@ -380,13 +380,13 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "deconv2relu"
-  type: "ReLU"
+  type: "TanH"
   bottom: "deconv2"
   top: "deconv2"
 }
@@ -403,13 +403,13 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "deconv3relu"
-  type: "ReLU"
+  type: "TanH"
   bottom: "deconv3"
   top: "deconv3"
 }
@@ -439,13 +439,13 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "deconv4relu"
-  type: "ReLU"
+  type: "TanH"
   bottom: "deconv4"
   top: "deconv4"
 }
@@ -475,13 +475,13 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "deconv5relu"
-  type: "ReLU"
+  type: "TanH"
   bottom: "deconv5"
   top: "deconv5"
 }
@@ -497,13 +497,13 @@ layer {
     num_output: 3
     kernel_size: 11
     stride: 4
-    weight_filler {type: "xavier"}
+    weight_filler {type: "msra"}
     bias_filler { type: "constant" value: 0 }
   }
 }
 layer {
   name: "outputrelu"
-  type: "ReLU"
+  type: "TanH"
   bottom: "output"
   top: "output"
 }

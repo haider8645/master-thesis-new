@@ -1,17 +1,17 @@
-net: "/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/train-autoencode-alexnet-only-nir.prototxt"
+net: "/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/train-4-conv4-smaller.prototxt"
 test_iter: 100 # no_of_test_images / batch_size 
-test_interval: 10000
+test_interval: 800
 test_compute_loss: true
 # ---------- training parameters ----------
 base_lr: 0.0001
 weight_decay: 0.0001
 momentum: 0.9
 lr_policy: "step"
-stepsize: 50000
+stepsize: 10000
 gamma: 0.1 
 # ---------- visualization parameters ----------
 display: 100
-max_iter: 340000 # epochs*(no_of_train_images / batch_size) 
+max_iter: 55000 # epochs*(no_of_train_images / batch_size) 
 type: "Adam"
 snapshot: 50000
 snapshot_prefix: "/home/lod/master-thesis/examples/master-thesis/new_models/autoencoder_on_alexnet/snapshots/"
