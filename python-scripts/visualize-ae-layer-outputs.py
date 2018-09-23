@@ -32,46 +32,9 @@ for j in range(100):
     net.forward()
 
     for i in range(3):
-      #  if j == 5:
             cv2.imwrite(os.path.join(dirname,'input_image_' + str(i) + str(j) + '.jpg'), 255 * net.blobs['data/img'].data[0,i])
-    
-  #  for i in range(20):
-  #      if j == 10:
-  #          cv2.imwrite(os.path.join(dirname,'conv1_' + str(i) + '.jpg'), 255*net.blobs['conv1'].data[0,i])
-
-  #  for i in range(20):
-  #      if j == 10:
-  #          cv2.imwrite(os.path.join(dirname,'pool1_' + str(i) + '.jpg'), 255*net.blobs['pool1'].data[0,i])
-    
-  #  for i in range(10):
-  #      if j == 10:
-  #          cv2.imwrite(os.path.join(dirname,'conv2_' + str(i) + '.jpg'), 255*net.blobs['conv2'].data[0,i])
-  #  for i in range(10):
-  #      if j == 10:
-  #          cv2.imwrite(os.path.join(dirname,'pool2_' + str(i) + '.jpg'), 255*net.blobs['pool2'].data[
-
-  #  for i in range(5):
-  #      if j== 10:
-  #          cv2.imwrite(os.path.join(dirname,'deconv3_' + str(i) + '.jpg'), 255*net.blobs['deconv3'].data[0,i]) 
-
-#    for i in range(5):
-#        if j== 10:
-#            cv2.imwrite(os.path.join(dirname,'pool3_' + str(i) + '.jpg'), 255*net.blobs['pool3'].data[0,i])
-
-
-
-
-#    for i in range(3):
-#        if j== 10:
-#            cv2.imwrite(os.path.join(dirname,'deconv1_' + str(i) + '.jpg'), 255*net.blobs['deconv1'].data[0,i])
 
     for i in range(3):
-       # if j== 5:
             cv2.imwrite(os.path.join(dirname,'output_' + str(i)+ str(j)+ '.jpg'), 255 * net.blobs['output'].data[0,i])
 
 
-#    for i in range(10):
-#        cv2.imwrite(os.path.join(dirname,'conv2_neuron_' + str(j) + '.jpg'), 255*net.blobs['conv2'].data[0,i])
-
-#    for i in range(10):
-#        cv2.imwrite(os.path.join(dirname,'conv3_neuron_' + str(j) + '.jpg'), 255*net.blobs['conv3'].data[0,i])

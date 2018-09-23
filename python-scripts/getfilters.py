@@ -22,7 +22,7 @@ net = caffe.Net(model_def,
 
 net.forward()
 
-padding = 4 
+padding = 4
 
     # The parameters are a list of [weights, biases]
 data =np.copy(net.params['output'][0].data)

@@ -38,16 +38,13 @@ for j in range(0,900):
         if j < 900:
             X = (net.blobs["conv5_r"].data[0,i])
             a[i]=np.concatenate((X[0,:],X[1,:],X[2,:],X[3,:],X[4,:],X[5,:]),axis=0)
-#            print a[j,:]
-
-            
 
     if j < 900:
         b[j] = np.concatenate((a[0,:],a[1,:],a[2,:],a[3,:],a[4,:],a[5,:],a[6,:],a[7,:],a[8,:],a[9,:]
                                ,a[10,:],a[11,:],a[12,:],a[13,:],a[14,:],a[15,:],a[16,:],a[17,:],a[18,:],a[19,:]
                                ,a[20,:],a[21,:],a[22,:],a[23,:],a[24,:],a[25,:],a[26,:],a[27,:],a[28,:],a[29,:]
                                ,a[30,:],a[31,:]),axis=0)
-      #  print b[j]    
+
         labels[j] = (net.blobs["label"].data[0])
         print labels[j]
         iteration_count = 'Iteration: ' + repr(j)
